@@ -1,0 +1,36 @@
+﻿
+
+@model ProjectManager.Web.ViewModels.ProjectCreateViewModel
+
+<form class="card" method="post" asp-action="CreateProject" role="form" enctype="multipart/form-data">
+    <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;"><strong>Create Project</strong></h4>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="card-body form-type-combine">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="Name" class="require"></label>
+                    <input type="text" class="form-control" asp-for="Name" required>
+                    <span asp-validation-for="Name" class="text-danger invalid-feedback"></span>
+                </div>
+                <div class="form-group">
+                    <label>Assigned Teams</label>
+                    <select asp-for="SelectedTeams" asp-items="@Model.Teams">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="card-footer text-right">
+        <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </footer>
+</form>
+
+
+
+

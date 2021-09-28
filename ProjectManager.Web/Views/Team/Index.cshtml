@@ -1,0 +1,39 @@
+﻿@model ProjectManager.Web.ViewModels.TeamIndexViewModel
+
+@{
+    ViewData["Title"] = "Team Page";
+}
+<div class="card">
+
+    <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;">
+        <strong>@ViewData["Title"]</strong>
+    </h4>
+
+    <div class="card-body">
+        <div>
+            <a class="btn btn-primary" asp-action="CreateTeam" >Add Team</a>
+        </div>
+        <hr />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="w-300px">Name</th>
+                    <th class="text-right w-100px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var team in Model.Teams)
+                {
+                    <tr>
+                        <td>@team.Name</td>
+                        <td class="text-right">
+                            <a class="btn btn-info" asp-action="EditTeam" asp-route-id="@team.Id">Edit</a>
+                            <a class="btn btn-danger" asp-action="DeleteTeam" asp-route-id="@team.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

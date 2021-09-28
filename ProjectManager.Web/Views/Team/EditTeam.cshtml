@@ -1,0 +1,8 @@
+﻿@model   ProjectManager.Web.ViewModels.TeamEditViewModel
+
+<div>
+    @foreach (var member in Model.Team.Persons)
+    {
+    <span>@member.Name</span>
+    }
+</div>

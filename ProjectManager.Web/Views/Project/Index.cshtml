@@ -1,0 +1,40 @@
+﻿@model ProjectManager.Web.ViewModels.ProjectIndexViewModel
+
+@{ 
+    ViewData["Title"] = "Project Page";
+}
+
+<div class="card">
+
+    <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;">
+        <strong>@ViewData["Title"]</strong>
+    </h4>
+
+    <div class="card-body">
+        <div>
+            <a class="btn btn-primary" asp-action="CreateProject">Add Project</a>
+        </div>
+        <hr />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="w-300px">Name</th>
+                    <th class="text-right w-100px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model.Projects)
+                {
+                    <tr>
+                        <td>@project.Name</td>
+                        <td class="text-right">
+                            <a class="btn btn-info" asp-action="EditProject" asp-route-id="@project.Id">Edit</a>
+                            <a class="btn btn-danger" asp-action="DeleteProject" asp-route-id="@project.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
