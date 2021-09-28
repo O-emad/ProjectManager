@@ -42,20 +42,20 @@ namespace ProjectManager.Web.Controllers
         [HttpPost]
         public IActionResult CreateMember(MemberCreateViewModel viewmodel)
         {
-            var member = repository.GetPersonByEmail(viewmodel.Email);
-            if(member != null)
+            var person = repository.GetPersonByEmail(viewmodel.Email);
+            if(person != null)
             {
                 ModelState.AddModelError("Email", "This Email address is already registered");
                 return View(viewmodel);
             }
 
-            member = new Person()
+            var member = new Member()
             {
                 Name = viewmodel.Name,
                 Mail = viewmodel.Email
             };
-
-            repository.AddPerson(member);
+            var personToAdd = mapper.Map<Person>(member);
+            repository.AddPerson(personToAdd);
             repository.Save();
             return RedirectToAction("Index");
         }

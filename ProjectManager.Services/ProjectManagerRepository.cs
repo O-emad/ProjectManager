@@ -23,21 +23,61 @@ namespace ProjectManager.Services
                 context.Add<Person>(person);
         }
 
-        public void AddProject(Project project)
+        public void AddProject(Project project, IEnumerable<Guid> associatedTeams = null)
         {
-            if (project != null)
-                context.Add<Project>(project);
+
+            if (project == null) return;
+
+            if (associatedTeams != null)
+            {
+                var teamsList = new List<Team>();
+                foreach (var teamId in associatedTeams)
+                {
+                    var team = GetTeamById(teamId);
+                    if (team != null)
+                        teamsList.Add(team);
+                }
+                project.Teams = teamsList;
+            }
+            context.Add<Project>(project);
+
+
         }
 
-        public void AddTask(Domain.Task task)
+        public void AddTask(Task task, Guid projectId = default(Guid))
         {
-            if (task != null)
+
+            if (task == null) return;
+            if(projectId != default(Guid))
+            {
+                var project = GetProjectById(projectId, includeTasks: true);
+                if (project != null)
+                {
+                    project.Tasks.Add(task);
+                }
+            }
+            else
+            {
                 context.Add<Task>(task);
+            }
+                
         }
-        public void AddTeam(Team team)
+        public void AddTeam(Team team, IEnumerable<Guid> associatedPersons = null)
         {
-            if (team != null)
-                context.Add<Team>(team);
+            if (team == null) return;
+
+            if (associatedPersons != null)
+            {
+                var personsList = new List<Person>();
+                foreach (var personId in associatedPersons)
+                {
+                    var person = GetPersonById(personId);
+                    if (person != null)
+                        personsList.Add(person);
+                }
+                team.Persons = personsList;
+            }
+            context.Add<Team>(team);
         }
         #endregion
 
@@ -81,12 +121,17 @@ namespace ProjectManager.Services
             return context.Persons.ToList();
         }
 
-        public Project GetProjectById(Guid projectId)
+        public Project GetProjectById(Guid projectId, bool includeTasks = false, bool includeTeams = false)
         {
-            return context.Projects.FirstOrDefault(p => p.Id == projectId);
+            var project = context.Projects as IQueryable<Project>;
+            if (includeTasks)
+                project = project.Include(p => p.Tasks);
+            if (includeTeams)
+                project = project.Include(p => p.Teams);
+            return project.FirstOrDefault(p => p.Id == projectId);
         }
 
-       
+
 
         public IEnumerable<Project> GetProjects()
         {

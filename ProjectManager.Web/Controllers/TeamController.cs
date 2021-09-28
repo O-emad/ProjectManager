@@ -41,21 +41,14 @@ namespace ProjectManager.Web.Controllers
         [HttpPost]
         public IActionResult CreateTeam(TeamCreateViewModel viewModel)
         {
-            var membersList = new List<Person>();
-            foreach (var memberId in viewModel.SelectedMembers)
-            {
-                var member = repository.GetPersonById(memberId);
-                if (member != null)
-                    membersList.Add(member);
-            }
-
-            var team = new Team()
+            
+            var team = new TeamModel()
             {
                 Name = viewModel.Name,
-                Persons = membersList
             };
+            var teamToAdd = mapper.Map<Team>(team);
 
-            repository.AddTeam(team);
+            repository.AddTeam(teamToAdd, viewModel.SelectedMembers);
             repository.Save();
 
             return RedirectToAction("Index");
@@ -66,9 +59,11 @@ namespace ProjectManager.Web.Controllers
             return RedirectToAction("Index");
         }
 
+
         public IActionResult EditTeam(Guid id)
         {
-            var team = repository.GetTeamById(id,includePersons: true);
+            var team = mapper.Map<TeamModel>(repository.GetTeamById(id,includePersons: true));
+
             var viewModel = new TeamEditViewModel();
             viewModel.Team = team;
             return View(viewModel);

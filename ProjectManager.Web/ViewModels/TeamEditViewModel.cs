@@ -1,4 +1,5 @@
 ﻿using ProjectManager.Domain;
+using ProjectManager.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace ProjectManager.Web.ViewModels
 {
     public class TeamEditViewModel
     {
-        public Team Team { get; set; }
+        public TeamModel Team { get; set; }
     }
 }

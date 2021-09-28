@@ -8,10 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ProjectManager.Web.Controllers
 {
+    
     public class ProjectController : Controller
     {
         private readonly IProjectManagerRepository repository;
@@ -47,21 +48,14 @@ namespace ProjectManager.Web.Controllers
         [HttpPost]
         public IActionResult CreateProject(ProjectCreateViewModel viewModel)
         {
-            var teamList = new List<Team>();
-            foreach (var teamId in viewModel.SelectedTeams)
-            {
-                var team = repository.GetTeamById(teamId,includePersons: true);
-                if (team != null)
-                    teamList.Add(team);
-            }
-
-            var project = new Project()
+   
+            var project = new ProjectModel()
             {
                 Name = viewModel.Name,
-                Teams = teamList
             };
 
-            repository.AddProject(project);
+            var projectToAdd = mapper.Map<Project>(project);
+            repository.AddProject(projectToAdd, viewModel.SelectedTeams);
             repository.Save();
 
             return RedirectToAction("Index");
@@ -72,6 +66,36 @@ namespace ProjectManager.Web.Controllers
             return View();
         }
 
+        public IActionResult ProjectDetails(Guid id)
+        {
+            
+            var project = mapper.Map<ProjectModel>(repository.GetProjectById(id,includeTasks: true));
+            if(project == null)
+            {
+                //return a not found page
+            }
+            var members = mapper.Map<List<Member>>( repository.GetPersons());
+            var viewModel = new ProjectDetailsViewModel(project, members);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        //[Route("Project/ProjectDetails/{id}")]
+        public IActionResult AddTask(Guid id, ProjectDetailsViewModel viewmodel)
+        {
+           
+            var task = new TaskModel()
+            {
+                AssigneeId = viewmodel.TaskCreateViewModel.Assigne,
+                Name = viewmodel.TaskCreateViewModel.Name,
+                Description = viewmodel.TaskCreateViewModel.Description,
+                DueDate = viewmodel.TaskCreateViewModel.DueDate,
+            };
+            var taskToAdd = mapper.Map<Task>(task);
+            repository.AddTask(taskToAdd, id);
+            repository.Save();
+            return RedirectToAction("ProjectDetails", new { id = id });
+        }
         
     }
 }

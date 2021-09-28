@@ -10,7 +10,7 @@ namespace ProjectManager.Services
         bool TaskExists(Guid taskId);
         IEnumerable<Task> GetTasks();
         Task GetTaskById(Guid taskId);
-        void AddTask(Task task);
+        void AddTask(Task task, Guid projectId = default(Guid));
         void DeleteTask(Task task);
         void UpdateTask(Task task);
         #endregion
@@ -19,7 +19,7 @@ namespace ProjectManager.Services
         bool TeamExists(Guid teamId);
         IEnumerable<Team> GetTeams();
         Team GetTeamById(Guid teamId, bool includePersons = false);
-        void AddTeam(Team team);
+        void AddTeam(Team team, IEnumerable<Guid> associatedPersons = null);
         void DeleteTeam(Team team);
         void UpdateTeam(Team team);
         #endregion
@@ -27,8 +27,8 @@ namespace ProjectManager.Services
         #region Project
         bool ProjectExists(Guid projectId);
         IEnumerable<Project> GetProjects();
-        Project GetProjectById(Guid projectId);
-        void AddProject(Project project);
+        Project GetProjectById(Guid projectId, bool includeTasks = false, bool includeTeams = false);
+        void AddProject(Project project, IEnumerable<Guid> associatedTeams = null);
         void DeleteProject(Project project);
         void UpdateProject(Project project);
         #endregion

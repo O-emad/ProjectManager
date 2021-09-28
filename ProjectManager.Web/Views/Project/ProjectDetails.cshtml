@@ -1,0 +1,95 @@
+﻿@model ProjectManager.Web.ViewModels.ProjectDetailsViewModel
+
+@{
+    ViewData["Title"] = $"Project: {Model.Project.Name}";
+}
+
+<div class="card">
+
+    <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;">
+        <strong>@ViewData["Title"]</strong>
+    </h4>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="showmodal">
+        <div class="modal-dialog" role="document">
+            <form class="modal-content" method="post" asp-action="AddTask" asp-route-id="@Model.Project.Id" role="form" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4 class="modal-title text-left">New Task</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="modal-body form-type-combine">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="TaskCreateViewModel.Name" class="require"></label>
+                                <input type="text" class="form-control" asp-for="TaskCreateViewModel.Name" required>
+                                <span asp-validation-for="TaskCreateViewModel.Name" class="text-danger invalid-feedback"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="TaskCreateViewModel.DueDate" class="require"></label>
+                                <input type="datetime-local" class="form-control" asp-for="TaskCreateViewModel.DueDate" required>
+                                <span asp-validation-for="TaskCreateViewModel.DueDate" class="text-danger invalid-feedback"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="TaskCreateViewModel.Description" class=""></label>
+                                <textarea type="text" class="form-control" asp-for="TaskCreateViewModel.Description"></textarea>
+                                <span asp-validation-for="TaskCreateViewModel.Description" class="text-danger invalid-feedback"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Assignee</label>
+                                <select asp-for="TaskCreateViewModel.Assigne" asp-items="@Model.TaskCreateViewModel.TeamMembers">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div>
+            <button id="open" data-toggle="modal" data-target="#showmodal" class="btn btn-primary">Add Task</button>
+            <!--<a class="btn btn-primary" asp-action="AddTask" asp-route-id="@Model.Project.Id">Add Task</a>-->
+        </div>
+        <hr />
+        <table class="table">
+            <thead>
+                <tr class="col-12">
+                    <th class="col-5 text-left">Name</th>
+                    <th class="col-5 text-left">Due Date</th>
+                    <th class="text-right col-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Project.Tasks != null && Model.Project.Tasks.Count > 0)
+                {
+                    foreach (var task in Model.Project.Tasks)
+                    {
+                        <tr>
+                            <td><a class="text-dark" asp-action="ProjectDetails" asp-route-id="@task.Id">@task.Name</a></td>
+                            <td>
+                                @task.DueDate
+                            </td>
+                            <td class="text-right">
+                                <a class="btn btn-info" asp-action="EditProject" asp-route-id="@task.Id">Edit</a>
+                                <a class="btn btn-danger" asp-action="DeleteProject" asp-route-id="@task.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
