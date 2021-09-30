@@ -17,6 +17,7 @@ namespace ProjectManager.Domain
         public DateTime DueDate { get; set; }
         [MaxLength(500)]
         public string Description { get; set; }
+        public bool CompletionStatus { get; set; }
         public List<Project> Projects { get; set; }
         public Person Assignee { get; set; }
         [ForeignKey("Assigne")]

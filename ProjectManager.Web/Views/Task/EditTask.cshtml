@@ -1,0 +1,70 @@
+﻿@model ProjectManager.Web.ViewModels.TaskEditViewModel
+
+@{
+    ViewData["Title"] = $"Task: {Model.Name}";
+    var completion = Model.CompletionStatus ? "completed" : "incompleted";
+}
+
+    <form class="card shadow" method="post" asp-action="EditTask" role="form" enctype="multipart/form-data">
+        <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;"><strong>@ViewData["Title"]</strong></h4>
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="card-body form-type-combine">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Name" class="require"></label>
+                        <input type="text" class="form-control" asp-for="Name" required>
+                        <span asp-validation-for="Name" class="text-danger invalid-feedback"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DueDate" class="require"></label>
+                        <input type="datetime-local" class="form-control" asp-for="DueDate" required>
+                        <span asp-validation-for="DueDate" class="text-danger invalid-feedback"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class=""></label>
+                        <textarea type="text" class="form-control" asp-for="Description"></textarea>
+                        <span asp-validation-for="Description" class="text-danger invalid-feedback"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AssigneeId"></label>
+                        <select asp-for="AssigneeId" asp-items="@Model.TeamMembers">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Projects"></label>
+                        <select asp-for="SelectedProjects" asp-items="@Model.Projects"
+                                multiple id="dropDownList">
+                        </select>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="btn-group-toggle" data-toggle="buttons">
+                            <label asp-for="CompletionStatus"></label>
+                            <label class="btn btn-outline-success btn-circle incompleted @(Model.CompletionStatus?"active":null)">
+                                <input type="checkbox" asp-for="CompletionStatus" autocomplete="off"> <i class="bi-check-lg"></i>
+                            </label>
+                        </div>
+                        @*<label asp-for="CompletionStatus"></label>
+        <input type="button" class="btn btn-circle btn-outline-success @completion"
+           asp-for="CompletionStatus">
+            <i class="bi-check-lg"></i>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+            
+        <div class="card-footer text-right text-muted">
+            @if (Model.CallingProjectId != default)
+            {
+            <a class="btn btn-outline-secondary" asp-controller="Project" asp-action="ProjectDetails"
+               asp-route-id="@Model.CallingProjectId">Return</a>
+            }
+            <button type="submit" class="btn btn-outline-primary">Submit</button>
+        </div>
+        <input type="hidden" asp-for="CallingProjectId" />
+    </form>

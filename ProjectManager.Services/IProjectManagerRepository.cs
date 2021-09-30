@@ -9,8 +9,9 @@ namespace ProjectManager.Services
         #region Task
         bool TaskExists(Guid taskId);
         IEnumerable<Task> GetTasks();
-        Task GetTaskById(Guid taskId);
+        Task GetTaskById(Guid taskId, bool includeProject = false, bool includePerson = false);
         void AddTask(Task task, Guid projectId = default(Guid));
+        void AddTask(Task task, IEnumerable<Guid> projectIds);
         void DeleteTask(Task task);
         void UpdateTask(Task task);
         #endregion

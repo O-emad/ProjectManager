@@ -17,8 +17,8 @@
                 </div>
                 <div class="form-group">
                     <label>Team Members</label>
-                    <select asp-for="SelectedMembers" asp-items="@Model.TeamMembers"
-                            >
+                    <select id="dropDownList" asp-for="SelectedMembers" asp-items="@Model.TeamMembers" multiple
+                            class="form-control">
                     </select>
                 </div>
             </div>
@@ -31,7 +31,4 @@
         <button class="btn btn-primary" type="submit">Submit</button>
     </footer>
 </form>
-
-
-
 

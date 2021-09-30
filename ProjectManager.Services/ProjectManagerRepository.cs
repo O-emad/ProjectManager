@@ -62,6 +62,27 @@ namespace ProjectManager.Services
             }
                 
         }
+        public void AddTask(Task task, IEnumerable<Guid> projectIds)
+        {
+
+            if (task == null) return;
+            if (projectIds != null)
+            {
+                foreach (var projectId in projectIds)
+                {
+                    var project = GetProjectById(projectId, includeTasks: true);
+                    if (project != null)
+                    {
+                        project.Tasks.Add(task);
+                    }
+                }
+            }
+            else
+            {
+                context.Add<Task>(task);
+            }
+
+        }
         public void AddTeam(Team team, IEnumerable<Guid> associatedPersons = null)
         {
             if (team == null) return;
@@ -138,9 +159,14 @@ namespace ProjectManager.Services
             return context.Projects.ToList();
         }
 
-        public Domain.Task GetTaskById(Guid taskId)
+        public Domain.Task GetTaskById(Guid taskId, bool includeProject = false, bool includePerson = false)
         {
-            return context.Tasks.FirstOrDefault(t => t.Id == taskId);
+            var task = context.Tasks as IQueryable<Task>;
+            if (includePerson)
+                task = task.Include(t => t.Assignee);
+            if (includeProject)
+                task = task.Include(t => t.Projects);
+            return task.FirstOrDefault(t => t.Id == taskId);
         }
 
         public IEnumerable<Domain.Task> GetTasks()

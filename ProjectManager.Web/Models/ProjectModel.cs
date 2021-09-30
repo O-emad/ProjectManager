@@ -12,4 +12,5 @@ namespace ProjectManager.Web.Models
         public string Name { get; set; }
         public List<TaskModel> Tasks { get; set; }
     }
+
 }

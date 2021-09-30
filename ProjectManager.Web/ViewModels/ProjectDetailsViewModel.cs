@@ -14,11 +14,15 @@ namespace ProjectManager.Web.ViewModels
         public TaskCreateViewModel TaskCreateViewModel { get; set; }
         public ProjectModel Project { get; set; }
 
-        public ProjectDetailsViewModel(ProjectModel project, IEnumerable<Member> members)
+        public ProjectDetailsViewModel(ProjectModel project)
         {
             TaskCreateViewModel = new TaskCreateViewModel();
             Project = project;
-            TaskCreateViewModel.TeamMembers = new SelectList(members, "Id", "Name");
+        }
+        public ProjectDetailsViewModel(ProjectModel project, TaskCreateViewModel viewModel)
+        {
+            TaskCreateViewModel = viewModel;
+            Project = project;
         }
         public ProjectDetailsViewModel()
         {

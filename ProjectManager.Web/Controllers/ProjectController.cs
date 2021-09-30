@@ -74,28 +74,14 @@ namespace ProjectManager.Web.Controllers
             {
                 //return a not found page
             }
+            var projects = mapper.Map<List<ProjectModel>>(repository.GetProjects());
             var members = mapper.Map<List<Member>>( repository.GetPersons());
-            var viewModel = new ProjectDetailsViewModel(project, members);
+            var creatTaskViewModel = new TaskCreateViewModel(members, projects, project);
+            var viewModel = new ProjectDetailsViewModel(project,creatTaskViewModel);
             return View(viewModel);
         }
 
-        [HttpPost]
-        //[Route("Project/ProjectDetails/{id}")]
-        public IActionResult AddTask(Guid id, ProjectDetailsViewModel viewmodel)
-        {
-           
-            var task = new TaskModel()
-            {
-                AssigneeId = viewmodel.TaskCreateViewModel.Assigne,
-                Name = viewmodel.TaskCreateViewModel.Name,
-                Description = viewmodel.TaskCreateViewModel.Description,
-                DueDate = viewmodel.TaskCreateViewModel.DueDate,
-            };
-            var taskToAdd = mapper.Map<Task>(task);
-            repository.AddTask(taskToAdd, id);
-            repository.Save();
-            return RedirectToAction("ProjectDetails", new { id = id });
-        }
-        
+       
+
     }
 }

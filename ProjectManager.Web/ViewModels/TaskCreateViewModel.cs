@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using ProjectManager.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,7 +25,30 @@ namespace ProjectManager.Web.ViewModels
         [StringLength(500, ErrorMessage = "Keep description in 500 charachter limit")]
         public string Description { get; set; }
 
+        [Display(Name="Assignee")]
         public Guid Assigne { get; set; }
         public SelectList TeamMembers { get; set; }
+
+        [Display(Name ="Projects")]
+        public MultiSelectList Projects { get; set; }
+
+        public List<Guid> SelectedProjects { get; set; }
+
+        public TaskCreateViewModel()
+        {
+
+        }
+        public TaskCreateViewModel(IEnumerable<Member> members, IEnumerable<ProjectModel> projects)
+        {
+            TeamMembers = new SelectList(members, "Id", "Name");
+            Projects = new MultiSelectList(projects, "Id", "Name");
+        }
+        public TaskCreateViewModel(IEnumerable<Member> members, IEnumerable<ProjectModel> projects, ProjectModel parentProject)
+        {
+            SelectedProjects = new List<Guid>() { parentProject.Id };
+            TeamMembers = new SelectList(members, "Id", "Name");
+            Projects = new MultiSelectList(projects, "Id", "Name",SelectedProjects);
+        }
+
     }
 }

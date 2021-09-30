@@ -77,6 +77,9 @@ namespace ProjectManager.Data.Migrations
                     b.Property<Guid>("AssigneeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("CompletionStatus")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
