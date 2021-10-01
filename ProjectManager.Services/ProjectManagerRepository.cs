@@ -171,7 +171,7 @@ namespace ProjectManager.Services
 
         public IEnumerable<Domain.Task> GetTasks()
         {
-            return context.Tasks.ToList();
+            return context.Tasks.OrderBy(t=>t.DueDate).ToList();
         }
         public IEnumerable<Team> GetTeams()
         {

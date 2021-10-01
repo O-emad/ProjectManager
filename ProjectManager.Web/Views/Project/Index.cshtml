@@ -4,7 +4,7 @@
     ViewData["Title"] = "Project Page";
 }
 
-<div class="card">
+<div class="card shadow">
 
     <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;">
         <strong>@ViewData["Title"]</strong>
@@ -12,7 +12,7 @@
 
     <div class="card-body">
         <div>
-            <a class="btn btn-primary" asp-action="CreateProject">Add Project</a>
+            <a class="btn btn-outline-primary" asp-action="CreateProject">Add Project</a>
         </div>
         <hr />
         <table class="table">
@@ -28,8 +28,8 @@
                     <tr>
                         <td><a class="text-dark" asp-action="ProjectDetails" asp-route-id="@project.Id">@project.Name</a></td>
                         <td class="text-right">
-                            <a class="btn btn-info" asp-action="EditProject" asp-route-id="@project.Id">Edit</a>
-                            <a class="btn btn-danger" asp-action="DeleteProject" asp-route-id="@project.Id">Delete</a>
+                            <a class="btn btn-outline-info" asp-action="EditProject" asp-route-id="@project.Id">Edit</a>
+                            <a class="btn btn-outline-danger" asp-action="DeleteProject" asp-route-id="@project.Id">Delete</a>
                         </td>
                     </tr>
                 }

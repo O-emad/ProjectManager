@@ -72,8 +72,9 @@ namespace ProjectManager.Web.Controllers
             var project = mapper.Map<ProjectModel>(repository.GetProjectById(id,includeTasks: true));
             if(project == null)
             {
-                //return a not found page
+                return View("NotFound");
             }
+            project.Tasks = project.Tasks.OrderBy(p => p.DueDate).ToList();
             var projects = mapper.Map<List<ProjectModel>>(repository.GetProjects());
             var members = mapper.Map<List<Member>>( repository.GetPersons());
             var creatTaskViewModel = new TaskCreateViewModel(members, projects, project);

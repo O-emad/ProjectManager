@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Team Page";
 }
-<div class="card">
+<div class="card shadow">
 
     <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;">
         <strong>@ViewData["Title"]</strong>
@@ -11,7 +11,7 @@
 
     <div class="card-body">
         <div>
-            <a class="btn btn-primary" asp-action="CreateTeam" >Add Team</a>
+            <a class="btn btn-outline-primary" asp-action="CreateTeam" >Add Team</a>
         </div>
         <hr />
         <table class="table">
@@ -27,8 +27,8 @@
                     <tr>
                         <td>@team.Name</td>
                         <td class="text-right">
-                            <a class="btn btn-info" asp-action="EditTeam" asp-route-id="@team.Id">Edit</a>
-                            <a class="btn btn-danger" asp-action="DeleteTeam" asp-route-id="@team.Id">Delete</a>
+                            <a class="btn btn-outline-info" asp-action="EditTeam" asp-route-id="@team.Id">Edit</a>
+                            <a class="btn btn-outline-danger" asp-action="DeleteTeam" asp-route-id="@team.Id">Delete</a>
                         </td>
                     </tr>
                 }
