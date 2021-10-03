@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.Domain
 {
-    public class Person
+    public class Person 
     {
         [Key]
         public Guid Id { get; set; }
