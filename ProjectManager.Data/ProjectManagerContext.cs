@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ProjectManager.Domain;
 using System;
 
 namespace ProjectManager.Data
 {
-    public class ProjectManagerContext :DbContext
+    public class ProjectManagerContext : IdentityDbContext
     {
         public ProjectManagerContext()
         {
@@ -15,6 +16,7 @@ namespace ProjectManager.Data
         {
 
         }
+        
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<Person> Persons { get; set; }

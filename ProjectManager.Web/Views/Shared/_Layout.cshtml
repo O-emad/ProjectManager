@@ -31,7 +31,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Team</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Index">Projects</a>
@@ -43,12 +43,23 @@
 
 
                     </ul>
-                    
+                    @if (!User.Identity.IsAuthenticated)
+                    {
                     <ul class="nav justify-content-end">
                         <li class="nav-item">
-                            <a class="btn btn-outline-primary text-right" asp-action="Login" asp-controller="User">Login</a>
+                            <a class="btn btn-outline-primary" asp-action="Login" asp-controller="Account">Login</a>
                         </li>
                     </ul>
+            }
+            else
+            {
+                <ul class="nav justify-content-end">
+                    <li>
+                        <span>Welcome @User.Identity.Name</span>
+                        <a class="btn btn-outline-danger" asp-action="Logout" asp-controller="Account">Logout</a>
+                    </li>
+                </ul>
+            }
                 </div>
 
                 @*<a class="btn btn-outline-primary" asp-action="Login" asp-controller="User">Login</a>*@
@@ -69,6 +80,8 @@
 
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.js"></script>
