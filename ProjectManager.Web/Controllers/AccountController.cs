@@ -56,11 +56,6 @@ namespace ProjectManager.Web.Controllers
 
             return View(viewModel);
         }
-
-
-
-
-
         public IActionResult Register(string ReturnUrl)
         {
             var viewModel = new AccountRegisterationViewModel();
