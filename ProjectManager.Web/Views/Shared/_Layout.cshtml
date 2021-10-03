@@ -20,8 +20,10 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo1.png" alt="logo icon">
-                OffBeat.PM</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/logo1.png" alt="logo icon">
+                    OffBeat.PM
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -37,8 +39,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Member" asp-action="Index">Members</a>
                         </li>
+
+
+
+                    </ul>
+                    
+                    <ul class="nav justify-content-end">
+                        <li class="nav-item">
+                            <a class="btn btn-outline-primary text-right" asp-action="Login" asp-controller="User">Login</a>
+                        </li>
                     </ul>
                 </div>
+
+                @*<a class="btn btn-outline-primary" asp-action="Login" asp-controller="User">Login</a>*@
             </div>
         </nav>
     </header>
