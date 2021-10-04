@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManager.Domain;
 using ProjectManager.Web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,11 @@ namespace ProjectManager.Web.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly SignInManager<IdentityUser> signInManager;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public AccountController(SignInManager<IdentityUser> signInManager,
-                                 UserManager<IdentityUser> userManager)
+        public AccountController(SignInManager<ApplicationUser> signInManager,
+                                 UserManager<ApplicationUser> userManager)
         {
             this.signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -68,7 +69,7 @@ namespace ProjectManager.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = viewModel.Input.Email, Email = viewModel.Input.Email };
+                var user = new ApplicationUser { UserName = viewModel.Input.Email, Email = viewModel.Input.Email };
                 var result = await userManager.CreateAsync(user, viewModel.Input.Password);
 
                 if (result.Succeeded)

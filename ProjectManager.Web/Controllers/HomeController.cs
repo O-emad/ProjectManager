@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProjectManager.Domain;
 using ProjectManager.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -12,15 +14,19 @@ namespace ProjectManager.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         public IActionResult Index()
         {
-            return View();
+            var users = userManager.Users.Select(u => u.Email).ToList();
+
+            return View(users);
         }
 
         public IActionResult Privacy()

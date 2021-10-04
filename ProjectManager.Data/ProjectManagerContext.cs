@@ -5,7 +5,7 @@ using System;
 
 namespace ProjectManager.Data
 {
-    public class ProjectManagerContext : IdentityDbContext
+    public class ProjectManagerContext : IdentityDbContext<ApplicationUser>
     {
         public ProjectManagerContext()
         {

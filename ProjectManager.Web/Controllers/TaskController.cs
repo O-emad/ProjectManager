@@ -86,16 +86,6 @@ namespace ProjectManager.Web.Controllers
             }
             var task = mapper.Map<TaskEditDto>(viewModel);
             var _task = repository.GetTaskById(viewModel.Id,includeProject: true);
-            //var projectsList = new List<Project>(task.ProjectIds.Select(t => new Project { Id = t }));
-            //var query = from project in taskToEdit.Projects
-            //            join projectid in projectsList
-            //            on project.Id equals projectid.Id into gj
-            //            from subpro in gj.DefaultIfEmpty()
-            //            select subpro;
-            //taskToEdit.Projects = query.ToList();
-
-            //var editedTask = mapper.Map<Task>(task);
-            //repository.UpdateTask(editedTask);
             mapper.Map(task, _task);
             var newProjects = new List<Project>();
             foreach (var proj in task.ProjectIds)

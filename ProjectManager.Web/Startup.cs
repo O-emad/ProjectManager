@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectManager.Data;
+using ProjectManager.Domain;
 using ProjectManager.Services;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace ProjectManager.Web
                 opt.UseSqlServer(Configuration.GetConnectionString("PMDB"));
             });
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ProjectManagerContext>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
