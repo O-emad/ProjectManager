@@ -22,5 +22,9 @@ namespace ProjectManager.Domain
         public Person Assignee { get; set; }
         [ForeignKey("Assigne")]
         public Guid AssigneeId { get; set; }
+
+        public ApplicationUser User { get; set; }
+        [ForeignKey("User")]
+        public Guid UserId { get; set; }
     }
 }

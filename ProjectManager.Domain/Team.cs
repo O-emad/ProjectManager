@@ -16,5 +16,6 @@ namespace ProjectManager.Domain
         public string Name { get; set; }
         public List<Project> Projects { get; set; }
         public List<Person> Persons { get; set; }
+        public List<ApplicationUser> User { get; set; }
     }
 }

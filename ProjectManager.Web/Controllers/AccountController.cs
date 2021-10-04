@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Domain;
+using ProjectManager.Web.Models;
 using ProjectManager.Web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,12 +18,15 @@ namespace ProjectManager.Web.Controllers
     {
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IEmailSender emailSender;
 
         public AccountController(SignInManager<ApplicationUser> signInManager,
-                                 UserManager<ApplicationUser> userManager)
+                                 UserManager<ApplicationUser> userManager,
+                                 IEmailSender emailSender)
         {
             this.signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this.emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
 
         public async Task<IActionResult> Logout()
@@ -41,7 +46,18 @@ namespace ProjectManager.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                var user = await userManager.FindByEmailAsync(viewModel.Input.Email);
+                if (user != null) {
+                    if (await userManager.CheckPasswordAsync(user, viewModel.Input.Password))
+                    {
+                        if(! await userManager.IsEmailConfirmedAsync(user))
+                        {
+                            ViewBag.ErrorTitle = "Please Confirm your Email";
+                            return View("Error");
+                        }
+                            
+                    }
+                }
                 var result = await signInManager.PasswordSignInAsync(viewModel.Input.Email, viewModel.Input.Password,
                                                                      isPersistent: viewModel.Input.RememberMe, lockoutOnFailure: false);
 
@@ -74,8 +90,15 @@ namespace ProjectManager.Web.Controllers
 
                 if (result.Succeeded)
                 {
-                    await signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(viewModel.ReturnUrl);
+                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                        new { userId = user.Id, token = token }, Request.Scheme);
+                    await emailSender.SendEmailAsync(user.Email, "Email Confirmation Required", confirmationLink);
+
+                    ViewBag.ErrorTitle = "Please Confirm your Email";
+                    return View("Error");
+                    //await signInManager.SignInAsync(user, isPersistent: false);
+                    //return LocalRedirect(viewModel.ReturnUrl);
                 }
                 foreach (var error in result.Errors)
                 {
@@ -85,6 +108,28 @@ namespace ProjectManager.Web.Controllers
 
             return View(viewModel);
         }
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if(userId == null || token == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var user = await userManager.FindByIdAsync(userId);
+            if(user == null)
+            {
+                ViewBag.ErrorMessage = $"The user Id {userId} is invalid";
+                return View("NotFound");
+            }
+            var result = await userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View();
+            }
+            ViewBag.ErrorTitle = "Email cannot be confirmed";
+            return View("Error");
+        }
+
         [AcceptVerbs("Get", "Post")]
         public async Task<IActionResult> IsEmailInUse([FromQuery(Name ="Input.Email")] string email)
         { 
