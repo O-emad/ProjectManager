@@ -9,7 +9,7 @@ namespace ProjectManager.Services
         #region Task
         bool TaskExists(Guid taskId);
         IEnumerable<Task> GetTasks();
-        Task GetTaskById(Guid taskId, bool includeProject = false, bool includePerson = false);
+        Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false);
         void AddTask(Task task, Guid projectId = default(Guid));
         void AddTask(Task task, IEnumerable<Guid> projectIds);
         void DeleteTask(Task task);
@@ -20,7 +20,7 @@ namespace ProjectManager.Services
         bool TeamExists(Guid teamId);
         IEnumerable<Team> GetTeams();
         Team GetTeamById(Guid teamId, bool includeUsers = false);
-        void AddTeam(Team team, IEnumerable<Guid> associatedPersons = null);
+        void AddTeam(Team team, IEnumerable<Guid> associatedUsers = null);
         void DeleteTeam(Team team);
         void UpdateTeam(Team team);
         #endregion
@@ -32,18 +32,11 @@ namespace ProjectManager.Services
         void AddProject(Project project, IEnumerable<Guid> associatedTeams = null);
         void DeleteProject(Project project);
         void UpdateProject(Project project);
+
+        public IEnumerable<List<ApplicationUser>> GetUsersForProject(Guid projectId);
         #endregion
 
-        #region Person
-        bool PersonExists(Guid personId);
-        bool EmailExists(string email);
-        IEnumerable<Person> GetPersons();
-        Person GetPersonById(Guid personId);
-        Person GetPersonByEmail(string email);
-        void AddPerson(Person person);
-        void DeletePerson(Person person);
-        void UpdatePerson(Person person);
-        #endregion
+
 
         #region User
         System.Threading.Tasks.Task DeleteUser(ApplicationUser user);

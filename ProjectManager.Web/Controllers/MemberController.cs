@@ -43,33 +43,13 @@ namespace ProjectManager.Web.Controllers
         [HttpPost]
         public IActionResult CreateMember(MemberCreateViewModel viewmodel)
         {
-            var person = repository.GetPersonByEmail(viewmodel.Email);
-            if(person != null)
-            {
-                ModelState.AddModelError("Email", "This Email address is already registered");
-                return View(viewmodel);
-            }
-
-            var member = new Member()
-            {
-                UserName = viewmodel.Name,
-                Email = viewmodel.Email
-            };
-            var personToAdd = mapper.Map<Person>(member);
-            repository.AddPerson(personToAdd);
-            repository.Save();
+            
             return RedirectToAction("Index");
         }
 
         public IActionResult DeleteMember(Guid id)
         {
-            var person = repository.GetPersonById(id);
-            if (person != null)
-            {
-                repository.DeletePerson(person);
-                repository.Save();
-            }
-            
+
             return RedirectToAction("Index");
         }
         

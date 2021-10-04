@@ -11,6 +11,7 @@ namespace ProjectManager.Web.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public List<TaskModel> Tasks { get; set; }
+        public List<TeamModel> Teams { get; set; }
     }
 
 }

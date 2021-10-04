@@ -21,11 +21,7 @@ namespace ProjectManager.Services
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
         #region Create
-        public void AddPerson(Person person)
-        {
-            if (person != null)
-                context.Add<Person>(person);
-        }
+
 
         public void AddProject(Project project, IEnumerable<Guid> associatedTeams = null)
         {
@@ -112,10 +108,6 @@ namespace ProjectManager.Services
         {
             await userManager.DeleteAsync(user);
         }
-        public void DeletePerson(Person person)
-        {
-            context.Remove<Person>(person);
-        }
 
         public void DeleteProject(Project project)
         {
@@ -144,22 +136,6 @@ namespace ProjectManager.Services
         {
             return context.Users.ToList();
         }
-
-        public Person GetPersonById(Guid personId)
-        {
-            return context.Persons.FirstOrDefault(p => p.Id == personId);
-        }
-
-        public Person GetPersonByEmail(string email)
-        {
-            return context.Persons.FirstOrDefault(p => (p.Mail.ToLower() == email.ToLower()));
-        }
-
-        public IEnumerable<Person> GetPersons()
-        {
-            return context.Persons.ToList();
-        }
-
         public Project GetProjectById(Guid projectId, bool includeTasks = false, bool includeTeams = false)
         {
             var project = context.Projects as IQueryable<Project>;
@@ -167,7 +143,21 @@ namespace ProjectManager.Services
                 project = project.Include(p => p.Tasks);
             if (includeTeams)
                 project = project.Include(p => p.Teams);
-            return project.FirstOrDefault(p => p.Id == projectId);
+                    
+            var _project = project.FirstOrDefault(p => p.Id == projectId);
+            return _project;
+        }
+
+        public IEnumerable<List<ApplicationUser>> GetUsersForProject(Guid projectId)
+        {
+            var projects = context.Projects as IQueryable<Project>;
+            var query = from project in projects
+                        let user = from team in project.Teams
+                                   select team.User
+                        where project.Id == projectId
+                        select user;
+            var result = query.FirstOrDefault();
+            return result;
         }
 
 
@@ -177,11 +167,11 @@ namespace ProjectManager.Services
             return context.Projects.ToList();
         }
 
-        public Domain.Task GetTaskById(Guid taskId, bool includeProject = false, bool includePerson = false)
+        public Domain.Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false)
         {
             var task = context.Tasks as IQueryable<Domain.Task>;
-            if (includePerson)
-                task = task.Include(t => t.Assignee);
+            if (includeUser)
+                task = task.Include(t => t.User);
             if (includeProject)
                 task = task.Include(t => t.Projects);
             return task.FirstOrDefault(t => t.Id == taskId);
@@ -207,14 +197,7 @@ namespace ProjectManager.Services
         #endregion
 
         #region Utility
-        public bool PersonExists(Guid personId)
-        {
-            return context.Persons.Any(p => p.Id == personId);
-        }
-        public bool EmailExists(string email)
-        {
-            return context.Persons.Any(p => (p.Mail.ToLower() == email.ToLower()));
-        }
+        
 
         public bool ProjectExists(Guid projectId)
         {
@@ -238,10 +221,7 @@ namespace ProjectManager.Services
         #endregion
 
         #region Update
-        public void UpdatePerson(Person person)
-        {
-            //does nothing
-        }
+
 
         public void UpdateProject(Project project)
         {

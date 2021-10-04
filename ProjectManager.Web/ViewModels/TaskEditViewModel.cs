@@ -32,7 +32,7 @@ namespace ProjectManager.Web.ViewModels
         public string Description { get; set; }
 
         [Display(Name = "Assignee")]
-        public Guid AssigneeId { get; set; }
+        public Guid UserId { get; set; }
         public SelectList TeamMembers { get; set; }
 
         [Display(Name = "Projects")]
@@ -42,7 +42,7 @@ namespace ProjectManager.Web.ViewModels
 
         public void Generate(IEnumerable<Member> members, IEnumerable<ProjectModel> projects)
         {
-            TeamMembers = new SelectList(members, "Id", "Name", new { AssigneeId });
+            TeamMembers = new SelectList(members, "Id", "UserName", new { UserId });
             Projects = new MultiSelectList(projects, "Id", "Name", SelectedProjects);
         }
 
@@ -55,8 +55,8 @@ namespace ProjectManager.Web.ViewModels
             Description = task.Description;
             DueDate = task.DueDate;
             CompletionStatus = task.CompletionStatus;
-            AssigneeId = task.AssigneeId;
-            TeamMembers = new SelectList(members, "Id", "Name", new { task.AssigneeId });
+            UserId = task.UserId;
+            TeamMembers = new SelectList(members, "Id", "UserName", new { task.UserId });
             Projects = new MultiSelectList(projects, "Id", "Name",task.Projects.Select(p=>p.Id));
         }
         public TaskEditViewModel(TaskEditViewModel viewModel)
@@ -65,7 +65,7 @@ namespace ProjectManager.Web.ViewModels
             Description = viewModel.Description;
             DueDate = viewModel.DueDate;
             CompletionStatus = viewModel.CompletionStatus;
-            AssigneeId = viewModel.AssigneeId;
+            UserId = viewModel.UserId;
 
         }
 

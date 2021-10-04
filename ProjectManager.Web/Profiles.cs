@@ -14,7 +14,6 @@ namespace ProjectManager.Web
     {
         public Profiles()
         {
-            CreateMap<Person, Member>().ReverseMap();
             CreateMap<ApplicationUser, Member>().ReverseMap();
             CreateMap<Team, TeamModel>()
                 .ForMember(dest=>dest.Members, opt=>opt.MapFrom(src=>src.User))

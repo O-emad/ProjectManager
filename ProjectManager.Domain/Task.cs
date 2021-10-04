@@ -19,10 +19,6 @@ namespace ProjectManager.Domain
         public string Description { get; set; }
         public bool CompletionStatus { get; set; }
         public List<Project> Projects { get; set; }
-        public Person Assignee { get; set; }
-        [ForeignKey("Assigne")]
-        public Guid AssigneeId { get; set; }
-
         public ApplicationUser User { get; set; }
         [ForeignKey("User")]
         public Guid UserId { get; set; }

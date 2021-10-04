@@ -67,9 +67,9 @@ namespace ProjectManager.Web.Controllers
 
         public IActionResult EditTask(Guid id, Guid callingProjectId = default)
         {
-            var task = mapper.Map<TaskModel>(repository.GetTaskById(id, includeProject: true, includePerson: true));
+            var task = mapper.Map<TaskModel>(repository.GetTaskById(id, includeProject: true, includeUser: true));
             var projects = mapper.Map<List<ProjectModel>>(repository.GetProjects());
-            var members = mapper.Map<List<Member>>(repository.GetPersons());
+            var members = mapper.Map<List<Member>>(repository.GetUsers());
             var viewModel = new TaskEditViewModel(task, members, projects, callingProjectId);
             return View(viewModel);
         }
@@ -80,7 +80,7 @@ namespace ProjectManager.Web.Controllers
             if (!ModelState.IsValid)
             {
                 var projects = mapper.Map<List<ProjectModel>>(repository.GetProjects());
-                var members = mapper.Map<List<Member>>(repository.GetPersons());
+                var members = mapper.Map<List<Member>>(repository.GetUsers());
                 viewModel.Generate(members, projects);
                 return View(viewModel);
             }
