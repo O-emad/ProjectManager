@@ -34,7 +34,7 @@ namespace ProjectManager.Web.Controllers
 
         public IActionResult CreateTeam()
         {
-            var members = mapper.Map<List<Member>>(repository.GetPersons());
+            var members = mapper.Map<List<Member>>(repository.GetUsers());
             var viewModel = new TeamCreateViewModel(members);
             return View(viewModel);
         }
@@ -63,7 +63,7 @@ namespace ProjectManager.Web.Controllers
 
         public IActionResult EditTeam(Guid id)
         {
-            var team = mapper.Map<TeamModel>(repository.GetTeamById(id,includePersons: true));
+            var team = mapper.Map<TeamModel>(repository.GetTeamById(id,includeUsers: true));
 
             var viewModel = new TeamEditViewModel();
             viewModel.Team = team;

@@ -40,13 +40,13 @@ namespace ProjectManager.Web.ViewModels
         }
         public TaskCreateViewModel(IEnumerable<Member> members, IEnumerable<ProjectModel> projects)
         {
-            TeamMembers = new SelectList(members, "Id", "Name");
+            TeamMembers = new SelectList(members, "Id", "UserName");
             Projects = new MultiSelectList(projects, "Id", "Name");
         }
         public TaskCreateViewModel(IEnumerable<Member> members, IEnumerable<ProjectModel> projects, ProjectModel parentProject)
         {
             SelectedProjects = new List<Guid>() { parentProject.Id };
-            TeamMembers = new SelectList(members, "Id", "Name");
+            TeamMembers = new SelectList(members, "Id", "UserName");
             Projects = new MultiSelectList(projects, "Id", "Name",SelectedProjects);
         }
 

@@ -27,7 +27,7 @@ namespace ProjectManager.Web.ViewModels
         }
         public TeamCreateViewModel(IEnumerable<Member> members)
         {
-            TeamMembers = new MultiSelectList(members, "Id", "Name");
+            TeamMembers = new MultiSelectList(members, "Id", "UserName");
         }
     }
 }

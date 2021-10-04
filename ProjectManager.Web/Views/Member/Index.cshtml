@@ -27,8 +27,8 @@
                 @foreach (var member in Model.Members)
                 {
                     <tr>
-                        <td>@member.Name</td>
-                        <td>@member.Mail</td>
+                        <td>@member.UserName</td>
+                        <td>@member.Email</td>
                         <td class="text-right">
                             <a class="btn btn-outline-info">Edit</a>
                             <a class="btn btn-outline-danger" asp-action="DeleteMember" asp-route-id="@member.Id">Delete</a>

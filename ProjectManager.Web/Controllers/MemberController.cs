@@ -27,7 +27,7 @@ namespace ProjectManager.Web.Controllers
         public IActionResult Index()
         {
             var viewModel = new MemberIndexViewModel();
-            var persons = repository.GetPersons();
+            var persons = repository.GetUsers();
             var members = mapper.Map<List<Member>>(persons);
             viewModel.Members = members;
             return View(viewModel);
@@ -52,8 +52,8 @@ namespace ProjectManager.Web.Controllers
 
             var member = new Member()
             {
-                Name = viewmodel.Name,
-                Mail = viewmodel.Email
+                UserName = viewmodel.Name,
+                Email = viewmodel.Email
             };
             var personToAdd = mapper.Map<Person>(member);
             repository.AddPerson(personToAdd);

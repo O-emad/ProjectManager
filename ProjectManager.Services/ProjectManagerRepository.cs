@@ -1,20 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ProjectManager.Data;
 using ProjectManager.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjectManager.Services
 {
     public class ProjectManagerRepository : IProjectManagerRepository
     {
         private readonly ProjectManagerContext context;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public ProjectManagerRepository(ProjectManagerContext context)
+        public ProjectManagerRepository(ProjectManagerContext context, UserManager<ApplicationUser> userManager)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
         #region Create
         public void AddPerson(Person person)
@@ -44,7 +48,7 @@ namespace ProjectManager.Services
 
         }
 
-        public void AddTask(Task task, Guid projectId = default(Guid))
+        public void AddTask(Domain.Task task, Guid projectId = default(Guid))
         {
 
             if (task == null) return;
@@ -58,11 +62,11 @@ namespace ProjectManager.Services
             }
             else
             {
-                context.Add<Task>(task);
+                context.Add<Domain.Task>(task);
             }
                 
         }
-        public void AddTask(Task task, IEnumerable<Guid> projectIds)
+        public void AddTask(Domain.Task task, IEnumerable<Guid> projectIds)
         {
 
             if (task == null) return;
@@ -79,24 +83,24 @@ namespace ProjectManager.Services
             }
             else
             {
-                context.Add<Task>(task);
+                context.Add<Domain.Task>(task);
             }
 
         }
-        public void AddTeam(Team team, IEnumerable<Guid> associatedPersons = null)
+        public void AddTeam(Team team, IEnumerable<Guid> associatedUsers = null)
         {
             if (team == null) return;
 
-            if (associatedPersons != null)
+            if (associatedUsers != null)
             {
-                var personsList = new List<Person>();
-                foreach (var personId in associatedPersons)
+                var usersList = new List<ApplicationUser>();
+                foreach (var userId in associatedUsers)
                 {
-                    var person = GetPersonById(personId);
-                    if (person != null)
-                        personsList.Add(person);
+                    var user = GetUserById(userId);
+                    if (user != null)
+                        usersList.Add(user);
                 }
-                team.Persons = personsList;
+                team.User = usersList;
             }
             context.Add<Team>(team);
         }
@@ -104,6 +108,10 @@ namespace ProjectManager.Services
 
         #region Delete
 
+        public async System.Threading.Tasks.Task DeleteUser(ApplicationUser user)
+        {
+            await userManager.DeleteAsync(user);
+        }
         public void DeletePerson(Person person)
         {
             context.Remove<Person>(person);
@@ -116,7 +124,7 @@ namespace ProjectManager.Services
 
         public void DeleteTask(Domain.Task task)
         {
-            context.Remove<Task>(task);
+            context.Remove<Domain.Task>(task);
         }
 
         public void DeleteTeam(Team team)
@@ -126,6 +134,16 @@ namespace ProjectManager.Services
         #endregion
 
         #region Read
+        
+        public ApplicationUser GetUserById(Guid userId)
+        {
+            return context.Users.FirstOrDefault(u => u.Id == userId);
+        }
+
+        public IEnumerable<ApplicationUser> GetUsers()
+        {
+            return context.Users.ToList();
+        }
 
         public Person GetPersonById(Guid personId)
         {
@@ -161,7 +179,7 @@ namespace ProjectManager.Services
 
         public Domain.Task GetTaskById(Guid taskId, bool includeProject = false, bool includePerson = false)
         {
-            var task = context.Tasks as IQueryable<Task>;
+            var task = context.Tasks as IQueryable<Domain.Task>;
             if (includePerson)
                 task = task.Include(t => t.Assignee);
             if (includeProject)
@@ -178,11 +196,11 @@ namespace ProjectManager.Services
             return context.Teams.ToList();
         }
 
-        public Team GetTeamById(Guid teamId, bool includePersons = false)
+        public Team GetTeamById(Guid teamId, bool includeUsers = false)
         {
             var team = context.Teams as IQueryable<Team>;
-            if (includePersons)
-                team = team.Include(t => t.Persons);
+            if (includeUsers)
+                team = team.Include(t => t.User);
             return team.FirstOrDefault(t => t.Id == teamId);
         }
 

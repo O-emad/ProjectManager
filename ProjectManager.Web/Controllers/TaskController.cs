@@ -31,7 +31,7 @@ namespace ProjectManager.Web.Controllers
 
             var task = new TaskModel()
             {
-                AssigneeId = viewmodel.TaskCreateViewModel.Assigne,
+                UserId = viewmodel.TaskCreateViewModel.Assigne,
                 Name = viewmodel.TaskCreateViewModel.Name,
                 Description = viewmodel.TaskCreateViewModel.Description,
                 DueDate = viewmodel.TaskCreateViewModel.DueDate,
