@@ -13,6 +13,7 @@ namespace ProjectManager.Web.Utilities
     public class EmailSender : IEmailSender
     {
         public AuthMessageSenderOptions Options { get; } //set only via Secret Manager
+        public bool IsSuccessStatusCode { get; set; }
         public EmailSender(IOptions<AuthMessageSenderOptions> options)
         {
             Options = options.Value;
@@ -36,7 +37,7 @@ namespace ProjectManager.Web.Utilities
             msg.SetClickTracking(false, false);
 
             var response =  await client.SendEmailAsync(msg);
-            
+            IsSuccessStatusCode = response.IsSuccessStatusCode;
             //var client = new SendGridClient(apiKey);
             //var from = new EmailAddress("test@example.com", "Example User");
             //var _subject = "Sending with SendGrid is Fun";

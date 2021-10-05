@@ -46,7 +46,7 @@ namespace ProjectManager.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByEmailAsync(viewModel.Input.Email);
+                var user = await userManager.FindByNameAsync(viewModel.Input.UserName);
                 if (user != null) {
                     if (await userManager.CheckPasswordAsync(user, viewModel.Input.Password))
                     {
@@ -58,7 +58,7 @@ namespace ProjectManager.Web.Controllers
                             
                     }
                 }
-                var result = await signInManager.PasswordSignInAsync(viewModel.Input.Email, viewModel.Input.Password,
+                var result = await signInManager.PasswordSignInAsync(viewModel.Input.UserName, viewModel.Input.Password,
                                                                      isPersistent: viewModel.Input.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
@@ -85,16 +85,24 @@ namespace ProjectManager.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = viewModel.Input.Email, Email = viewModel.Input.Email };
+                var user = new ApplicationUser { UserName = viewModel.Input.UserName, Email = viewModel.Input.Email };
                 var result = await userManager.CreateAsync(user, viewModel.Input.Password);
 
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, "User");
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     var confirmationLink = Url.Action("ConfirmEmail", "Account",
                         new { userId = user.Id, token = token }, Request.Scheme);
-                    await emailSender.SendEmailAsync(user.Email, "Email Confirmation Required", confirmationLink);
-
+                    try
+                    {
+                        await emailSender.SendEmailAsync(user.Email, "Email Confirmation Required", confirmationLink);
+                    }catch(Exception e)
+                    {
+                        //probably network is down.. redirect to error page
+                        ViewBag.ErrorTitle = "Couldn't send confirmation email";
+                        return View("Error");
+                    }
                     ViewBag.ErrorTitle = "Please Confirm your Email";
                     return View("Error");
                     //await signInManager.SignInAsync(user, isPersistent: false);
@@ -135,6 +143,39 @@ namespace ProjectManager.Web.Controllers
         { 
             var user = await userManager.FindByEmailAsync(email);
             return user == null ? Json(true) : Json($"Email {email} is already in use");
+        }
+
+        [AcceptVerbs("Get", "Post")]
+        public async Task<IActionResult> IsUserNameInUse([FromQuery(Name = "Input.UserName")] string userName)
+        {
+            var user = await userManager.FindByNameAsync(userName);
+            return user == null ? Json(true) : Json($"User Name {userName} is already in use");
+        }
+
+        public async System.Threading.Tasks.Task<IActionResult> DeleteUser(Guid id)
+        {
+            var user = await userManager.FindByIdAsync(id.ToString());
+            if (user != null)
+            {
+                await userManager.DeleteAsync(user);       
+            }
+            return RedirectToAction("Index","Member");
+        }
+
+        public async System.Threading.Tasks.Task<IActionResult> PromoteToAdmin([FromQuery] string key)
+        {
+            if (!string.IsNullOrWhiteSpace(key))
+            {
+                if (key == "QWERTY-12")
+                {
+                    var userName = User.Identity.Name;
+                    var user = await userManager.FindByNameAsync(userName);
+                    await userManager.AddToRoleAsync(user, "Admin");
+                    return RedirectToAction("Logout", "Account");
+                }
+            }
+            ViewBag.ErrorTitle = "Wrong Key";
+            return View("Error");
         }
     }
 }

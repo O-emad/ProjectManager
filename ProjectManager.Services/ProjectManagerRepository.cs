@@ -148,16 +148,26 @@ namespace ProjectManager.Services
             return _project;
         }
 
-        public IEnumerable<List<ApplicationUser>> GetUsersForProject(Guid projectId)
+        public IEnumerable<ApplicationUser> GetUsersForProject(Guid projectId)
         {
             var projects = context.Projects as IQueryable<Project>;
-            var query = from project in projects
-                        let user = from team in project.Teams
-                                   select team.User
-                        where project.Id == projectId
-                        select user;
+            var query = (from project in projects
+                         let usersLists = from team in project.Teams
+                                          select team.User
+                         where project.Id == projectId
+                         select usersLists);
             var result = query.FirstOrDefault();
-            return result;
+            var _result = result.SelectMany(x => x).Distinct().ToList();
+
+            //var query2 = from project in projects
+            //             where project.Id == projectId
+            //             let usersLists = from team in project.Teams
+            //                              select team.User
+            //             from userList in usersLists
+            //             from user in userList
+            //             select user as IEnumerable<ApplicationUser>;
+            //var result2 = query2.FirstOrDefault();
+            return _result;
         }
 
 
@@ -198,7 +208,17 @@ namespace ProjectManager.Services
 
         #region Utility
         
-
+        public Dictionary<string,string> Summary()
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("team", context.Teams.Count().ToString());
+            dic.Add("project", context.Projects.Count().ToString());
+            dic.Add("task", context.Tasks.Count().ToString());
+            dic.Add("user", context.Users.Count().ToString());
+            dic.Add("completedtasks", context.Tasks.Where(t => t.CompletionStatus).Count().ToString());
+            return dic;
+        }
+        
         public bool ProjectExists(Guid projectId)
         {
             return context.Projects.Any(p => p.Id == projectId);

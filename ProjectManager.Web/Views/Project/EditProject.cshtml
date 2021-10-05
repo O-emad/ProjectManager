@@ -1,7 +1,7 @@
-﻿@model ProjectManager.Web.ViewModels.TeamEditViewModel
+﻿@model ProjectManager.Web.ViewModels.ProjectEditViewModel
 
-<form class="card shadow" method="post" asp-action="EditTeam" asp-route-id="@Model.Id" role="form" enctype="multipart/form-data">
-    <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;"><strong>Edit Team : @Model.Name</strong></h4>
+<form class="card shadow" method="post" asp-action="EditProject" asp-route-id="@Model.Id" role="form" enctype="multipart/form-data">
+    <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;"><strong>Edit Project : @Model.Name</strong></h4>
 
     <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -14,8 +14,8 @@
                     <span asp-validation-for="Name" class="text-danger invalid-feedback"></span>
                 </div>
                 <div class="form-group">
-                    <label>Team Members</label>
-                    <select id="dropDownList" asp-for="SelectedMembers" asp-items="@Model.TeamMembers" multiple
+                    <label>Teams</label>
+                    <select id="dropDownList" asp-for="SelectedTeams" asp-items="@Model.Teams" multiple
                             class="form-control">
                     </select>
                 </div>

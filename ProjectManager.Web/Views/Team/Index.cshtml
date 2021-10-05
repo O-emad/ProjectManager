@@ -3,6 +3,30 @@
 @{
     ViewData["Title"] = "Team Page";
 }
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteTeammodal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-left">Delete Team</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <strong class="text-danger">Are you sure you want to delete this team?</strong>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                <a id="deleteConfirmationSubmit" href="~/" class="btn btn-outline-danger">Delete</a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div class="card shadow">
 
     <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;">
@@ -28,7 +52,11 @@
                         <td>@team.Name</td>
                         <td class="text-right">
                             <a class="btn btn-outline-info" asp-action="EditTeam" asp-route-id="@team.Id">Edit</a>
-                            <a class="btn btn-outline-danger" asp-action="DeleteTeam" asp-route-id="@team.Id">Delete</a>
+                            <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTeammodal" data-toggle="modal"
+                                    onclick="window.click(this)" asp-controller="Team" asp-action="DeleteTeam" asp-route-id="@team.Id"
+                                    >
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 }

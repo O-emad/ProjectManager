@@ -1,11 +1,62 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    @foreach (var email in Model)
-    {
-<span>@email</span>
-    }
+@model Dictionary<string,string>
+
+<div class="row">
+    <div class="col-md-4 col-lg-4">
+        <div class="card bg-pale-info">
+            <header class="card-header">
+                <h4 class="card-title"><strong>Teams</strong> <small class="sidetitle">Count of current Teams</small></h4>
+            </header>
+            <div class="card-body">
+                <div class="text-center my-2">
+                    <div class="fs-60 fw-400 text-info">@Model.GetValueOrDefault("team")</div>
+                    <span class="fw-400 text-muted">Total</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-lg-4">
+        <div class="card bg-pale-info">
+            <header class="card-header">
+                <h4 class="card-title"><strong>Projects</strong> <small class="sidetitle">Count of current Projects</small></h4>
+            </header>
+            <div class="card-body">
+                <div class="text-center my-2">
+                    <div class="fs-60 fw-400 text-info">@Model.GetValueOrDefault("project")</div>
+                    <span class="fw-400 text-muted">Total</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-lg-4">
+        <div class="card bg-pale-info">
+            <header class="card-header">
+                <h4 class="card-title"><strong>Tasks</strong> <small class="sidetitle">Count of current Tasks</small></h4>
+            </header>
+            <div class="card-body">
+                <div class="text-center my-2">
+                    <div class="fs-60 fw-400 text-info">@Model.GetValueOrDefault("task")</div>
+                    <span class="fw-400 text-muted">Total</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-lg-4">
+        <div class="card bg-pale-info">
+            <header class="card-header">
+                <h4 class="card-title"><strong>Users</strong> <small class="sidetitle">Count of current Users</small></h4>
+            </header>
+            <div class="card-body">
+                <div class="text-center my-2">
+                    <div class="fs-60 fw-400 text-info">@Model.GetValueOrDefault("user")</div>
+                    <span class="fw-400 text-muted">Total</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

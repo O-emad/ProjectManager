@@ -1,8 +1,31 @@
 ﻿@model ProjectManager.Web.ViewModels.ProjectIndexViewModel
 
-@{ 
+@{
     ViewData["Title"] = "Project Page";
 }
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteProjectmodal">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title text-left">Delete Project</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <strong class="text-danger">Are you sure you want to delete this project?</strong>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+            <a id="deleteConfirmationSubmit" href="~/" class="btn btn-outline-danger">Delete</a>
+
+        </div>
+
+    </div>
+</div>
+</div>
 
 <div class="card shadow">
 
@@ -11,10 +34,12 @@
     </h4>
 
     <div class="card-body">
+        @if (User.IsInRole("Admin")) { 
         <div>
             <a class="btn btn-outline-primary" asp-action="CreateProject">Add Project</a>
         </div>
         <hr />
+        }
         <table class="table">
             <thead>
                 <tr class="col-12">
@@ -29,7 +54,10 @@
                         <td><a class="text-dark" asp-action="ProjectDetails" asp-route-id="@project.Id">@project.Name</a></td>
                         <td class="text-right">
                             <a class="btn btn-outline-info" asp-action="EditProject" asp-route-id="@project.Id">Edit</a>
-                            <a class="btn btn-outline-danger" asp-action="DeleteProject" asp-route-id="@project.Id">Delete</a>
+                            <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteProjectmodal" data-toggle="modal"
+                                    onclick="window.click(this)" asp-controller="Project" asp-action="DeleteProject" asp-route-id="@project.Id">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 }

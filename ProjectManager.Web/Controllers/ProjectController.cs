@@ -36,7 +36,7 @@ namespace ProjectManager.Web.Controllers
         }
 
 
-        
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateProject()
         {
             
@@ -46,6 +46,7 @@ namespace ProjectManager.Web.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult CreateProject(ProjectCreateViewModel viewModel)
         {
@@ -62,10 +63,61 @@ namespace ProjectManager.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult EditProject()
+        [Authorize( Roles = "Admin")]
+        public IActionResult EditProject(Guid id)
         {
-            return View();
+            var project = repository.GetProjectById(id, includeTeams: true);
+            if (project == null)
+            {
+                ViewBag.ErrorMessage = "Project Not Found";
+                return View("NotFound");
+            }
+            var projectModel = mapper.Map<ProjectModel>(project);
+            var teams = mapper.Map<List<TeamModel>>(repository.GetTeams());
+            var viewModel = new ProjectEditViewModel(projectModel, teams);
+
+            return View(viewModel);
         }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult EditProject(Guid id, ProjectEditViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Id = id;
+                return View(viewModel);
+            }
+            var project = repository.GetProjectById(id, includeTeams: true);
+            if (project == null)
+            {
+                ViewBag.ErrorMessage = "Project Not Found";
+                return View("NotFound");
+            }
+            project.Name = viewModel.Name;
+            var teams = new List<Team>();
+            foreach (var teamId in viewModel.SelectedTeams)
+            {
+                teams.Add(repository.GetTeamById(teamId));
+            }
+            project.Teams = teams;
+            repository.UpdateProject(project);
+            repository.Save();
+            return RedirectToAction("Index");
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteProject(Guid id)
+        {
+            var project = repository.GetProjectById(id);
+            if (project != null)
+            {
+                repository.DeleteProject(project);
+                repository.Save();
+            }
+            return RedirectToAction("Index");
+        }
+
 
         public IActionResult ProjectDetails(Guid id)
         {
@@ -77,8 +129,8 @@ namespace ProjectManager.Web.Controllers
             }
             project.Tasks = project.Tasks.OrderBy(p => p.DueDate).ToList();
             var projects = mapper.Map<List<ProjectModel>>(repository.GetProjects());
-            var members = mapper.Map<List<Member>>( repository.GetUsers());
-            var _members = repository.GetUsersForProject(id);
+            //var members = mapper.Map<List<Member>>( repository.GetUsers());
+            var members = mapper.Map<List<Member>>( repository.GetUsersForProject(id));
             var creatTaskViewModel = new TaskCreateViewModel(members, projects, project);
             var viewModel = new ProjectDetailsViewModel(project,creatTaskViewModel);
             return View(viewModel);

@@ -33,7 +33,7 @@ namespace ProjectManager.Services
         void DeleteProject(Project project);
         void UpdateProject(Project project);
 
-        public IEnumerable<List<ApplicationUser>> GetUsersForProject(Guid projectId);
+        public IEnumerable<ApplicationUser> GetUsersForProject(Guid projectId);
         #endregion
 
 
@@ -45,7 +45,7 @@ namespace ProjectManager.Services
         #endregion
 
         bool Save();
-
+        public Dictionary<string, string> Summary();
 
     }
 }

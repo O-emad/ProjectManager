@@ -57,17 +57,55 @@ namespace ProjectManager.Web.Controllers
 
         public IActionResult DeleteTeam(Guid id)
         {
+            var team = repository.GetTeamById(id);
+            if(team != null)
+            {
+                repository.DeleteTeam(team);
+                repository.Save();
+            }
             return RedirectToAction("Index");
         }
 
 
         public IActionResult EditTeam(Guid id)
         {
-            var team = mapper.Map<TeamModel>(repository.GetTeamById(id,includeUsers: true));
+            var team = repository.GetTeamById(id, includeUsers: true);
+            if(team == null)
+            {
+                ViewBag.ErrorMessage = "Team not found";
+                return View("NotFound");
+            }
+            var teamModel = mapper.Map<TeamModel>(team);
+            var members = mapper.Map<List<Member>>(repository.GetUsers());
+            var viewModel = new TeamEditViewModel(teamModel, members);
 
-            var viewModel = new TeamEditViewModel();
-            viewModel.Team = team;
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult EditTeam(Guid id, TeamEditViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Id = id;
+                return View(viewModel);
+            }
+            var team = repository.GetTeamById(id,includeUsers:true);
+            if(team == null)
+            {
+                ViewBag.ErrorMessage = "Team Not Found";
+                return View("NotFound");
+            }
+            team.Name = viewModel.Name;
+            var members = new List<ApplicationUser>();
+            foreach (var memberId in viewModel.SelectedMembers)
+            {
+                members.Add(repository.GetUserById(memberId));
+            }
+            team.User = members;
+            repository.UpdateTeam(team);
+            repository.Save();
+            return RedirectToAction("Index");
         }
 
     }

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class MemberController : Controller
     {
         private readonly IProjectManagerRepository repository;
@@ -49,7 +50,7 @@ namespace ProjectManager.Web.Controllers
 
         public IActionResult DeleteMember(Guid id)
         {
-
+            
             return RedirectToAction("Index");
         }
         

@@ -47,6 +47,7 @@ namespace ProjectManager.Web
             });
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddRoles<ApplicationRole>()
                 .AddEntityFrameworkStores<ProjectManagerContext>()
                 .AddDefaultTokenProviders();
 
