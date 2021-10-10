@@ -51,7 +51,7 @@
                     <tr>
                         <td>@team.Name</td>
                         <td class="text-right">
-                            <a class="btn btn-outline-info" asp-action="EditTeam" asp-route-id="@team.Id">Edit</a>
+                            <a class="btn btn-outline-warning" asp-action="EditTeam" asp-route-id="@team.Id">Edit</a>
                             <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTeammodal" data-toggle="modal"
                                     onclick="window.click(this)" asp-controller="Team" asp-action="DeleteTeam" asp-route-id="@team.Id"
                                     >

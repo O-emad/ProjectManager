@@ -61,8 +61,12 @@
         <div class="card-footer text-right text-muted">
             @if (Model.CallingProjectId != default)
             {
-            <a class="btn btn-outline-secondary" asp-controller="Project" asp-action="ProjectDetails"
-               asp-route-id="@Model.CallingProjectId">Return</a>
+                <a class="btn btn-outline-secondary" asp-controller="Project" asp-action="ProjectDetails"
+                   asp-route-id="@Model.CallingProjectId">Return</a>
+            }
+            else
+            {
+                <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Return</a>
             }
             <button type="submit" class="btn btn-outline-primary">Submit</button>
         </div>

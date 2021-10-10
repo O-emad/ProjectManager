@@ -191,6 +191,28 @@ namespace ProjectManager.Services
         {
             return context.Tasks.OrderBy(t=>t.DueDate).ToList();
         }
+
+        public async Task<IEnumerable<Domain.Task>> GetHighPriorityTasks(int size = 0, string userName = "", bool isAdmin = false)
+        {
+            var task = context.Tasks as IQueryable<Domain.Task>;
+            task = task.Where(t=>!t.CompletionStatus)
+                .Include(t=>t.Projects).OrderBy(t => t.DueDate);
+            if (isAdmin)
+                return task.Take(size).ToList();
+
+            //not an admin ... get the user specific tasks
+            if (!string.IsNullOrWhiteSpace(userName)) {
+                var user = await userManager.FindByNameAsync(userName);
+                if (user == null)
+                {
+                    return new List<Domain.Task>();
+                }
+                task = task.Where(t => t.UserId == user.Id);
+            }
+            return task.Take(size).ToList();
+
+        }
+
         public IEnumerable<Team> GetTeams()
         {
             return context.Teams.ToList();

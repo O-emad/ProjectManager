@@ -43,21 +43,26 @@
         <table class="table">
             <thead>
                 <tr class="col-12">
-                    <th class="text-left col-10">Name</th>
-                    <th class="text-right col-2">Actions</th>
+                    <th class="text-left col-9">Name</th>
+                    <th class="text-right col-3">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var project in Model.Projects)
                 {
                     <tr>
-                        <td><a class="text-dark" asp-action="ProjectDetails" asp-route-id="@project.Id">@project.Name</a></td>
+                        <td>@project.Name</td>
                         <td class="text-right">
-                            <a class="btn btn-outline-info" asp-action="EditProject" asp-route-id="@project.Id">Edit</a>
+                            <a class="btn btn-outline-info" asp-action="ProjectDetails" asp-route-id="@project.Id">Details</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                            <a class="btn btn-outline-warning" asp-action="EditProject" asp-route-id="@project.Id">Edit</a>
+
                             <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteProjectmodal" data-toggle="modal"
                                     onclick="window.click(this)" asp-controller="Project" asp-action="DeleteProject" asp-route-id="@project.Id">
                                 Delete
                             </button>
+                            }
                         </td>
                     </tr>
                 }

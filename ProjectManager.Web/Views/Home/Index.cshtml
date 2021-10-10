@@ -1,17 +1,38 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model Dictionary<string,string>
+
+@model ProjectManager.Web.ViewModels.HomeIndexViewModel
 
 <div class="row">
     <div class="col-md-4 col-lg-4">
-        <div class="card bg-pale-info">
-            <header class="card-header">
-                <h4 class="card-title"><strong>Teams</strong> <small class="sidetitle">Count of current Teams</small></h4>
+        <div class="card border-primary mb-3 shadow">
+            <header class="card-header bg-transparent border-primary">
+                <h4 class="card-title">
+                    <strong>Teams</strong>
+                    <span><small>Count of current teams</small></span>
+                </h4>
             </header>
             <div class="card-body">
                 <div class="text-center my-2">
-                    <div class="fs-60 fw-400 text-info">@Model.GetValueOrDefault("team")</div>
+                    <div class="fs-60 fw-400 text-primary">@Model.Summary.GetValueOrDefault(Section.team)</div>
+                    <span class="fw-400 text-muted text-white">Total</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-lg-4">
+        <div class="card border-warning mb-3 shadow">
+            <header class="card-header bg-transparent border-warning">
+                <h4 class="card-title">
+                    <p><strong>Projects</strong></p>
+                    <span><small>Count of current projects</small></span>
+                </h4>
+            </header>
+            <div class="card-body">
+                <div class="text-center my-2">
+                    <div class="fs-60 fw-400 text-warning">@Model.Summary.GetValueOrDefault(Section.project)</div>
                     <span class="fw-400 text-muted">Total</span>
                 </div>
             </div>
@@ -19,44 +40,111 @@
     </div>
 
     <div class="col-md-4 col-lg-4">
-        <div class="card bg-pale-info">
-            <header class="card-header">
-                <h4 class="card-title"><strong>Projects</strong> <small class="sidetitle">Count of current Projects</small></h4>
+        <div class="card border-danger mb-3 shadow">
+            <header class="card-header bg-transparent border-danger">
+                <h4 class="card-title">
+                    <p><strong>Tasks</strong></p>
+                    <span><small>Count of current tasks</small></span>
+                </h4>
             </header>
             <div class="card-body">
                 <div class="text-center my-2">
-                    <div class="fs-60 fw-400 text-info">@Model.GetValueOrDefault("project")</div>
+                    <div class="fs-60 fw-400 text-danger">@Model.Summary.GetValueOrDefault(Section.task)</div>
                     <span class="fw-400 text-muted">Total</span>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-4 col-lg-4">
-        <div class="card bg-pale-info">
-            <header class="card-header">
-                <h4 class="card-title"><strong>Tasks</strong> <small class="sidetitle">Count of current Tasks</small></h4>
-            </header>
-            <div class="card-body">
-                <div class="text-center my-2">
-                    <div class="fs-60 fw-400 text-info">@Model.GetValueOrDefault("task")</div>
-                    <span class="fw-400 text-muted">Total</span>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="col-md-4 col-lg-4">
+            <div class="card border-info mb-3 shadow">
+                <header class="card-header bg-transparent border-info">
+                    <h4 class="card-title">
+                        <p><strong>Users</strong></p>
+                        <span><small>Count of current users</small></span>
+                    </h4>
+                </header>
+                <div class="card-body">
+                    <div class="text-center my-2">
+                        <div class="fs-60 fw-400 text-info">@Model.Summary.GetValueOrDefault(Section.user)</div>
+                        <span class="fw-400 text-muted">Total</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-4 col-lg-4">
-        <div class="card bg-pale-info">
-            <header class="card-header">
-                <h4 class="card-title"><strong>Users</strong> <small class="sidetitle">Count of current Users</small></h4>
-            </header>
-            <div class="card-body">
-                <div class="text-center my-2">
-                    <div class="fs-60 fw-400 text-info">@Model.GetValueOrDefault("user")</div>
-                    <span class="fw-400 text-muted">Total</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    }
 </div>
+<hr />
+
+<table class="table">
+    <thead>
+        <p><h4><strong>Urgent Tasks</strong></h4></p>
+        <tr class="col-12">
+
+            <th class="col-4 text-left">Name</th>
+            <th class="col-4 text-left">Project</th>
+            <th class="col-3 text-left">Due Date</th>
+            <th class="col-1 text-center">Completed</th>
+            @*<th class="text-right col-2">Actions</th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Tasks != null && Model.Tasks.Count > 0)
+        {
+            foreach (var task in Model.Tasks)
+            {
+                var completion = task.CompletionStatus ? "completed" : "incompleted";
+                var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
+                var projectsCount = task.Projects.Count();
+                var project = task.Projects.FirstOrDefault();
+                <tr>
+                    <td>
+                        <a class="text-black" asp-action="EditTask" asp-controller="Task" asp-route-id="@task.Id">
+                            @task.Name
+                        </a>
+                    </td>
+                    <td>
+                        @if (project != null)
+                        {
+                        <a class="text-black" asp-action="ProjectDetails" asp-controller="Project" asp-route-id="@project.Id">
+                            @project.Name@(projectsCount > 1 ? $", +{projectsCount} more" : "")
+                        </a>
+                    }
+                    else
+                    {
+                            <div>None</div>
+                    }
+                    </td>
+                    <td>
+                        @task.DueDate
+                    </td>
+
+                    <td class="text-center">
+
+                        <a class="btn btn-circle btn-outline-success @completion" asp-controller="Task"
+                           asp-action="ToggleTaskCompletion"
+                           asp-route-id="@task.Id"
+                           asp-route-redirectUrl="@requestPath">
+                            <i class="bi-check-lg"></i>
+                        </a>
+
+
+                    </td>
+
+                    @*<td class="text-right">
+
+                            <a class="btn btn-outline-info" asp-controller="Task" asp-action="EditTask" asp-route-id="@task.Id"
+                               asp-route-callingProjectId="@Model.Project.Id">Details</a>
+                            <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTaskmodal" data-toggle="modal"
+                                    onclick="window.click(this)" asp-controller="Task" asp-action="DeleteTask" asp-route-id="@task.Id"
+                                    asp-route-redirectUrl="@requestPath">
+                                Delete
+                            </button>
+                        </td>*@
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

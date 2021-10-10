@@ -9,6 +9,7 @@ namespace ProjectManager.Services
         #region Task
         bool TaskExists(Guid taskId);
         IEnumerable<Task> GetTasks();
+        System.Threading.Tasks.Task<IEnumerable<Task>> GetHighPriorityTasks(int size = 0, string userName = "", bool isAdmin = false);
         Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false);
         void AddTask(Task task, Guid projectId = default(Guid));
         void AddTask(Task task, IEnumerable<Guid> projectIds);

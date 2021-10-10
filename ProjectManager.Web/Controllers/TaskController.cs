@@ -98,7 +98,7 @@ namespace ProjectManager.Web.Controllers
 
             if (viewModel.CallingProjectId != default)
                 return RedirectToAction("ProjectDetails", "Project", new { id = viewModel.CallingProjectId });
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
 
 
