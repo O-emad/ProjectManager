@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Data;
 using ProjectManager.Domain;
+using ProjectManager.Services.Helpers;
+using ProjectManager.Services.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -171,6 +173,10 @@ namespace ProjectManager.Services
         }
 
 
+        //public PagedList<Project> GetProjects(ProjectResourceParameters resourceParameters)
+        //{
+        //    return new PagedList<Project>();
+        //}
 
         public IEnumerable<Project> GetProjects()
         {
