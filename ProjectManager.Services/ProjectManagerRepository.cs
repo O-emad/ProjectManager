@@ -57,22 +57,23 @@ namespace ProjectManager.Services
             context.Add<ProjectSection>(section);
 
         }
-        public void AddTask(Domain.Task task, Guid projectId = default(Guid))
+        public void AddTask(Domain.Task task, Guid sectionId = default(Guid))
         {
 
             if (task == null) return;
-            if(projectId != default(Guid))
+            if(sectionId != default(Guid))
             {
-                var project = GetProjectById(projectId, includeTasks: true);
-                if (project != null)
+                var section = GetSectionById(sectionId, includeTasks: true);
+                if (section != null)
                 {
-                    project.Tasks.Add(task);
+                    task.ProjectId = section.ProjectId;
+                    section.Tasks.Add(task);
                 }
             }
-            else
-            {
-                context.Add<Domain.Task>(task);
-            }
+            //else
+            //{
+            //    context.Add<Domain.Task>(task);
+            //}
                 
         }
         public void AddTask(Domain.Task task, IEnumerable<Guid> projectIds)
@@ -152,13 +153,21 @@ namespace ProjectManager.Services
         public Project GetProjectById(Guid projectId, bool includeTasks = false, bool includeTeams = false, bool includeSections = false)
         {
             var project = context.Projects as IQueryable<Project>;
-            if (includeTasks)
-                project = project.Include(p => p.Tasks);
             if (includeTeams)
                 project = project.Include(p => p.Teams);
-            if (includeSections)
-                project = project.Include(p => p.Sections);
-                    
+            if (includeSections&&includeTasks)
+            {
+                project = project.Include(p => p.Sections)
+                    .ThenInclude(s => s.Tasks);
+                
+            }
+            else
+            {
+                if (includeTasks)
+                    project = project.Include(p => p.Tasks);
+                if (includeSections)
+                    project = project.Include(p => p.Sections);
+            }
             var _project = project.FirstOrDefault(p => p.Id == projectId);
             return _project;
         }
@@ -196,13 +205,23 @@ namespace ProjectManager.Services
             return context.Projects.ToList();
         }
 
-        public Domain.Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false)
+        public ProjectSection GetSectionById(Guid sectionId, bool includeTasks = false)
+        {
+            var section = context.Sections as IQueryable<ProjectSection>;
+            if (includeTasks)
+                section = section.Include(s => s.Tasks);
+            return section.FirstOrDefault(s => s.Id == sectionId);
+        }
+
+        public Domain.Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false, bool includeSection = false)
         {
             var task = context.Tasks as IQueryable<Domain.Task>;
             if (includeUser)
                 task = task.Include(t => t.User);
             if (includeProject)
                 task = task.Include(t => t.Project);
+            if (includeSection)
+                task = task.Include(t => t.Section);
             return task.FirstOrDefault(t => t.Id == taskId);
         }
 

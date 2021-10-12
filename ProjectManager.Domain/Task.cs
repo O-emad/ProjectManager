@@ -19,8 +19,11 @@ namespace ProjectManager.Domain
         public string Description { get; set; }
         public bool CompletionStatus { get; set; }
         public Project Project { get; set; }
+        [ForeignKey("Project")]
+        public Guid ProjectId { get; set; }
         public ApplicationUser User { get; set; }
         [ForeignKey("User")]
         public Guid UserId { get; set; }
+        public ProjectSection Section { get; set; }
     }
 }

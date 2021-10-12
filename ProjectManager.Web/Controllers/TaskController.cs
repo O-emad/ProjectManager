@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Domain;
 using ProjectManager.Services;
@@ -37,7 +38,7 @@ namespace ProjectManager.Web.Controllers
                 DueDate = viewmodel.TaskCreateViewModel.DueDate,
             };
             var taskToAdd = mapper.Map<Task>(task);
-            repository.AddTask(taskToAdd, viewmodel.TaskCreateViewModel.SelectedProjects);
+            repository.AddTask(taskToAdd, viewmodel.TaskCreateViewModel.Section);
             repository.Save();
             return RedirectToAction("ProjectDetails","Project", new { id = id });
         }
@@ -52,6 +53,19 @@ namespace ProjectManager.Web.Controllers
             }
 
             return LocalRedirect(redirectUrl);
+        }
+
+        public IActionResult UpdateTaskSection(Guid id, [FromQuery] Guid sectionId)
+        {
+            var task = repository.GetTaskById(id, includeSection: true);
+            var section = repository.GetSectionById(sectionId);
+            if(task != null && section != null)
+            {
+                task.Section = section;
+                repository.Save();
+                return Ok(new { statuscode = StatusCodes.Status200OK, message = "task section updated successfully"});
+            }
+            return NotFound(new { statuscode = StatusCodes.Status404NotFound, message = "task or section not found" });
         }
 
         public IActionResult DeleteTask(Guid id, string redirectUrl)

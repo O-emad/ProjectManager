@@ -10,8 +10,8 @@ namespace ProjectManager.Services
         bool TaskExists(Guid taskId);
         IEnumerable<Task> GetTasks();
         System.Threading.Tasks.Task<IEnumerable<Task>> GetHighPriorityTasks(int size = 0, string userName = "", bool isAdmin = false);
-        Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false);
-        void AddTask(Task task, Guid projectId = default(Guid));
+        Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false, bool includeSection = false);
+        void AddTask(Task task, Guid sectionId = default(Guid));
         void AddTask(Task task, IEnumerable<Guid> projectIds);
         void DeleteTask(Task task);
         void UpdateTask(Task task);
@@ -38,6 +38,7 @@ namespace ProjectManager.Services
         #endregion
 
         #region ProjectSection
+        public ProjectSection GetSectionById(Guid sectionId, bool includeTasks = false);
         public void AddSection(Guid projectId, ProjectSection section);
         #endregion
 

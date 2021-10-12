@@ -128,10 +128,8 @@ namespace ProjectManager.Web.Controllers
                 return View("NotFound");
             }
             project.Tasks = project.Tasks.OrderBy(p => p.DueDate).ToList();
-            var projects = mapper.Map<List<ProjectModel>>(repository.GetProjects());
-            //var members = mapper.Map<List<Member>>( repository.GetUsers());
             var members = mapper.Map<List<Member>>( repository.GetUsersForProject(id));
-            var creatTaskViewModel = new TaskCreateViewModel(members, projects, project);
+            var creatTaskViewModel = new TaskCreateViewModel(members, project);
             var viewModel = new ProjectDetailsViewModel(project,creatTaskViewModel);
             return View(viewModel);
         }

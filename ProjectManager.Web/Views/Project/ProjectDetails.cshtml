@@ -1,16 +1,202 @@
 ﻿@model ProjectManager.Web.ViewModels.ProjectDetailsViewModel
 
 @{
-    ViewData["Title"] = $"Project: {Model.Project.Name}";
+    ViewData["Title"] = $"{Model.Project.Name}";
 }
 
+<style type="text/css">
+    .card.draggable {
+        margin-bottom: 1rem;
+        cursor: grab;
+    }
 
+        .card.draggable:hover {
+            box-shadow: 10px 5px 5px #8192f1;
+            /*border-color:crimson;*/
+        }
+
+    .droppable {
+        background-color: #808080;
+        /*border:2px dashed var(--secondary);*/
+        min-height: 120px;
+        margin-bottom: 1rem;
+    }
+</style>
 
 <div class="card shadow">
 
-    <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;">
-        <strong>@ViewData["Title"]</strong>
-    </h4>
+    @*<h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;">
+            <strong>@ViewData["Title"]</strong>
+        </h4>*@
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow shadow mb-3">
+        <div class="container">
+            <!---Add the project logo in here-->
+            <a class="navbar-brand">
+                @*<img src="~/img/logo1.png" alt="logo icon">*@
+                <i class="bi bi-layout-three-columns"></i>
+                @ViewData["Title"]
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+
+                    <a class="nav-item nav-link text-dark" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
+
+
+                    <a class="nav-item nav-link text-dark active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
+
+
+                    <a class="nav-item nav-link text-dark" id="board-tab" data-toggle="tab" href="#board" role="tab" aria-controls="board" aria-selected="false">Board</a>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+            <div class="card-body">
+                <p>@Model.Project.Name</p>
+            </div>
+        </div>
+        <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
+            <div class="card-body">
+                <div>
+                    <div class="btn-group dropdown">
+                        <button id="open" data-toggle="modal" data-target="#addTaskmodal" class="btn btn-outline-primary">
+                            Add Task
+                        </button>
+                        <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <button id="open" data-toggle="modal" data-target="#addSectionmodal" class="dropdown-item">
+                                Add Section
+                            </button>
+                        </div>
+                    </div>
+                    @*<button id="open" data-toggle="modal" data-target="#addTaskmodal" class="btn btn-outline-primary">Add Task</button>*@
+                </div>
+                @foreach (var section in Model.Project.Sections)
+                {
+                    <hr />
+                    <a class="text-black" data-toggle="collapse" href="@("#table"+section.Id)" role="button" aria-expanded="false"
+                       aria-controls="@("table"+section.Id)">
+                        <i class="bi bi-caret-right-fill"></i>@(section.Name)
+                    </a>
+
+                    <div class="collapse @(section.Tasks.Count>0?"show":"")" id="@("table"+section.Id)">
+                        <table class="table">
+                            <thead>
+                                <tr class="col-12">
+                                    <th class="col-5 text-left">Name</th>
+                                    <th class="col-4 text-left">Due Date</th>
+                                    <th class="col-1 text-center">Completed</th>
+                                    <th class="text-right col-2">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (section.Tasks != null && section.Tasks.Count > 0)
+                                {
+                                    @foreach (var task in section.Tasks)
+                                    {
+                                        var completion = task.CompletionStatus ? "completed" : "incompleted";
+                                        var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
+                                        <tr>
+                                            <td>@task.Name</td>
+                                            <td>
+                                                @task.DueDate
+                                            </td>
+                                            <td class="text-center">
+
+                                                <a class="btn btn-circle btn-outline-success @completion" asp-controller="Task"
+                                                   asp-action="ToggleTaskCompletion"
+                                                   asp-route-id="@task.Id"
+                                                   asp-route-redirectUrl="@requestPath">
+                                                    <i class="bi-check-lg"></i>
+                                                </a>
+
+
+                                            </td>
+                                            <td class="text-right">
+
+                                                <a class="btn btn-outline-info" asp-controller="Task" asp-action="EditTask" asp-route-id="@task.Id"
+                                                   asp-route-callingProjectId="@Model.Project.Id">Details</a>
+                                                <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTaskmodal" data-toggle="modal"
+                                                        onclick="window.click(this)" asp-controller="Task" asp-action="DeleteTask" asp-route-id="@task.Id"
+                                                        asp-route-redirectUrl="@requestPath">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="board" role="tabpanel" aria-labelledby="board-tab">
+            <div class="card-body">
+                <div class="container-fluid pt-3">
+
+                    <div class="row flex-row flex-sm-nowrap py-3 overflow-auto">
+                        @foreach (var section in Model.Project.Sections)
+                        {
+                            <div class="col-sm-6 col-md-4 col-xl-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-uppercase text-truncate py-2">@(section.Name)</h6>
+                                        <hr />
+                                        <div class="items" id="@(section.Id)">
+
+                                            @foreach (var task in section.Tasks)
+                                            {
+                                                var completion = task.CompletionStatus ? "completed" : "incompleted";
+                                                var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
+                                                <div class="dropzone rounded" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="clearDrop(event)"> &nbsp; </div>
+                                                <div class="card draggable" id="@("task"+task.Id)" draggable="true" ondragstart="drag(event)">
+                                                    <div class="card-body p-2">
+                                                        <div class="card-title">
+                                                            <a class="btn btn-circle btn-outline-success float-right @completion"
+                                                               asp-controller="Task"
+                                                               asp-action="ToggleTaskCompletion"
+                                                               asp-route-id="@task.Id"
+                                                               asp-route-redirectUrl="@requestPath">
+                                                                <i class="bi-check-lg"></i>
+                                                            </a>
+                                                            <a href="" class="lead font-weight-light">@task.Name</a>
+                                                        </div>
+                                                        <p>
+                                                            @task.Description
+                                                        </p>
+                                                        <input asp-for="@task.Section.Id" id="@("task"+task.Id+"section")" hidden />
+                                                        <a class="btn btn-outline-info" asp-controller="Task" asp-action="EditTask" asp-route-id="@task.Id"
+                                                           asp-route-callingProjectId="@Model.Project.Id">Details</a>
+                                                        <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTaskmodal" data-toggle="modal"
+                                                                onclick="window.click(this)" asp-controller="Task" asp-action="DeleteTask" asp-route-id="@task.Id"
+                                                                asp-route-redirectUrl="@requestPath">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="dropzone rounded" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="clearDrop(event)"> &nbsp; </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="addTaskmodal">
         <div class="modal-dialog" role="document">
@@ -47,11 +233,11 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label asp-for="TaskCreateViewModel.Projects"></label>
-                                <select asp-for="TaskCreateViewModel.SelectedProjects" asp-items="@Model.TaskCreateViewModel.Projects"
-                                        multiple id="dropDownList">
+                                <label asp-for="TaskCreateViewModel.Section"></label>
+                                <select asp-for="TaskCreateViewModel.Section" asp-items="@Model.TaskCreateViewModel.Sections">
                                 </select>
                             </div>
+                            <input asp-for="TaskCreateViewModel.ProjectId" hidden />
                         </div>
                     </div>
                 </div>
@@ -121,85 +307,25 @@
     </div>
 
 
-    <div class="card-body">
-        <div>
-            <div class="btn-group dropdown">
-                <button id="open" data-toggle="modal" data-target="#addTaskmodal" class="btn btn-outline-primary">
-                    Add Task
-                </button>
-                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu">
-                    <button id="open" data-toggle="modal" data-target="#addSectionmodal" class="dropdown-item">
-                        Add Section
-                    </button>
-                </div>
-            </div>
-            @*<button id="open" data-toggle="modal" data-target="#addTaskmodal" class="btn btn-outline-primary">Add Task</button>*@
-        </div>
-        @foreach (var section in Model.Project.Sections)
-        {
-            <hr />
-            <a class="text-black" data-toggle="collapse" href="@("#table"+section.Id)" role="button" aria-expanded="false"
-               aria-controls="@("table"+section.Id)">
-                <i class="bi bi-caret-right-fill"></i>@(section.Name)
-            </a>
 
-            <div class="collapse show" id="@("table"+section.Id)">
-                <table class="table">
-                    <thead>
-                        <tr class="col-12">
-                            <th class="col-5 text-left">Name</th>
-                            <th class="col-4 text-left">Due Date</th>
-                            <th class="col-1 text-center">Completed</th>
-                            <th class="text-right col-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.Project.Tasks != null && Model.Project.Tasks.Count > 0)
-                        {
-                            @foreach (var task in Model.Project.Tasks)
-                            {
-                                var completion = task.CompletionStatus ? "completed" : "incompleted";
-                                var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
-                                <tr>
-                                    <td>@task.Name</td>
-                                    <td>
-                                        @task.DueDate
-                                    </td>
-                                    <td class="text-center">
-
-                                        <a class="btn btn-circle btn-outline-success @completion" asp-controller="Task"
-                                           asp-action="ToggleTaskCompletion"
-                                           asp-route-id="@task.Id"
-                                           asp-route-redirectUrl="@requestPath">
-                                            <i class="bi-check-lg"></i>
-                                        </a>
-
-
-                                    </td>
-                                    <td class="text-right">
-
-                                        <a class="btn btn-outline-info" asp-controller="Task" asp-action="EditTask" asp-route-id="@task.Id"
-                                           asp-route-callingProjectId="@Model.Project.Id">Details</a>
-                                        <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTaskmodal" data-toggle="modal"
-                                                onclick="window.click(this)" asp-controller="Task" asp-action="DeleteTask" asp-route-id="@task.Id"
-                                                asp-route-redirectUrl="@requestPath">
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }
-    </div>
 
 </div>
 
 @section Scripts{
+<script type="text/javascript">
+    $('.nav-tabs a').on('show.bs.tab', function (e) {
+        const target = e.target.id;
+
+        //get pane and modify its 
+        //const targetpane = e.target.attributes.getNamedItem('href').value;
+        //const targetpaneId = targetpane.substring(1);
+        //const pane = document.getElementById(targetpaneId);
+        //pane.innerHTML = 'nothing';
+        //console.log(pane);
+        if (target == 'list-tab') {
+            window.location.reload();
+        }
+    });
+</script>
 
 }

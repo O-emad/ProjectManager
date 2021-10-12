@@ -28,27 +28,35 @@ namespace ProjectManager.Web.ViewModels
         [Display(Name="Assignee")]
         public Guid Assigne { get; set; }
         public SelectList TeamMembers { get; set; }
+        [Display(Name="Section")]
 
-        [Display(Name ="Projects")]
-        public MultiSelectList Projects { get; set; }
+        public Guid Section { get; set; }
 
-        public List<Guid> SelectedProjects { get; set; }
+        public SelectList Sections { get; set; }
+
+        public Guid ProjectId { get; set; }
 
         public TaskCreateViewModel()
         {
 
         }
-        public TaskCreateViewModel(IEnumerable<Member> members, IEnumerable<ProjectModel> projects)
+        public TaskCreateViewModel(IEnumerable<Member> members, ProjectModel parentProject)
         {
             TeamMembers = new SelectList(members, "Id", "UserName");
-            Projects = new MultiSelectList(projects, "Id", "Name");
+            ProjectId = parentProject.Id;
+            Sections = new SelectList(parentProject.Sections, "Id", "Name");
         }
-        public TaskCreateViewModel(IEnumerable<Member> members, IEnumerable<ProjectModel> projects, ProjectModel parentProject)
-        {
-            SelectedProjects = new List<Guid>() { parentProject.Id };
-            TeamMembers = new SelectList(members, "Id", "UserName");
-            Projects = new MultiSelectList(projects, "Id", "Name",SelectedProjects);
-        }
+        //public TaskCreateViewModel(IEnumerable<Member> members, IEnumerable<ProjectModel> projects)
+        //{
+        //    TeamMembers = new SelectList(members, "Id", "UserName");
+        //    Projects = new MultiSelectList(projects, "Id", "Name");
+        //}
+        //public TaskCreateViewModel(IEnumerable<Member> members, IEnumerable<ProjectModel> projects, ProjectModel parentProject)
+        //{
+        //    SelectedProjects = new List<Guid>() { parentProject.Id };
+        //    TeamMembers = new SelectList(members, "Id", "UserName");
+        //    Projects = new MultiSelectList(projects, "Id", "Name",SelectedProjects);
+        //}
 
     }
 }

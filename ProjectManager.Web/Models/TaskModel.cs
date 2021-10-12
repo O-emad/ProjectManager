@@ -15,5 +15,6 @@ namespace ProjectManager.Web.Models
         public bool CompletionStatus { get; set; }
         public Guid UserId { get; set; }
         public ProjectModel Project { get; set; }
+        public SectionModel Section { get; set; }
     }
 }
