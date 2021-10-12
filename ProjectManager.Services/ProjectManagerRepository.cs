@@ -46,6 +46,17 @@ namespace ProjectManager.Services
 
         }
 
+        public void AddSection(Guid projectId ,ProjectSection section)
+        {
+            if (section == null)
+                return;
+            var project = context.Projects.FirstOrDefault(p => p.Id == projectId);
+            if (project == null)
+                return;
+            section.ProjectId = projectId;
+            context.Add<ProjectSection>(section);
+
+        }
         public void AddTask(Domain.Task task, Guid projectId = default(Guid))
         {
 
@@ -138,13 +149,15 @@ namespace ProjectManager.Services
         {
             return context.Users.ToList();
         }
-        public Project GetProjectById(Guid projectId, bool includeTasks = false, bool includeTeams = false)
+        public Project GetProjectById(Guid projectId, bool includeTasks = false, bool includeTeams = false, bool includeSections = false)
         {
             var project = context.Projects as IQueryable<Project>;
             if (includeTasks)
                 project = project.Include(p => p.Tasks);
             if (includeTeams)
                 project = project.Include(p => p.Teams);
+            if (includeSections)
+                project = project.Include(p => p.Sections);
                     
             var _project = project.FirstOrDefault(p => p.Id == projectId);
             return _project;
@@ -189,7 +202,7 @@ namespace ProjectManager.Services
             if (includeUser)
                 task = task.Include(t => t.User);
             if (includeProject)
-                task = task.Include(t => t.Projects);
+                task = task.Include(t => t.Project);
             return task.FirstOrDefault(t => t.Id == taskId);
         }
 
@@ -202,7 +215,7 @@ namespace ProjectManager.Services
         {
             var task = context.Tasks as IQueryable<Domain.Task>;
             task = task.Where(t=>!t.CompletionStatus)
-                .Include(t=>t.Projects).OrderBy(t => t.DueDate);
+                .Include(t=>t.Project).OrderBy(t => t.DueDate);
             if (isAdmin)
                 return task.Take(size).ToList();
 

@@ -21,14 +21,16 @@ namespace ProjectManager.Web
             CreateMap<Project, ProjectModel>().ReverseMap();
             CreateMap<Task, TaskModel>().ReverseMap();
             CreateMap<TaskEditDto, Task>()
-                .ForMember(dest => dest.Projects,
+                .ForMember(dest => dest.Project,
                 opt => opt.Ignore()
                 //opt.MapFrom(src => src.ProjectIds.Select(p => new Project { Id = p }))
                 );
             CreateMap<TaskEditViewModel, TaskEditDto>()
-                .ForMember(dest => dest.ProjectIds,
+                .ForMember(dest => dest.ProjectId,
                 opt =>
                 opt.MapFrom(src => src.SelectedProjects));
+
+            CreateMap<ProjectSection, SectionModel>().ReverseMap();
         }
 
 

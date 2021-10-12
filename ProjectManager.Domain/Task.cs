@@ -18,7 +18,7 @@ namespace ProjectManager.Domain
         [MaxLength(500)]
         public string Description { get; set; }
         public bool CompletionStatus { get; set; }
-        public List<Project> Projects { get; set; }
+        public Project Project { get; set; }
         public ApplicationUser User { get; set; }
         [ForeignKey("User")]
         public Guid UserId { get; set; }

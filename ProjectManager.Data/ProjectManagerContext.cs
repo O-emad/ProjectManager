@@ -21,7 +21,7 @@ namespace ProjectManager.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<Team> Teams { get; set; }
-
+        public DbSet<ProjectSection> Sections { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ApplicationRole>().HasData(new ApplicationRole {Id= Guid.NewGuid(), Name= "Admin", NormalizedName = "Admin".ToUpper() },

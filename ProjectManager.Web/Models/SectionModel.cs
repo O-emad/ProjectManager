@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.Web.Models
 {
-    public class ProjectModel
+    public class SectionModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<TaskModel> Tasks { get; set; }
-        public List<TeamModel> Teams { get; set; }
-        public List<SectionModel> Sections { get; set; }
+        public List<Task> Tasks { get; set; }
+        public Guid ProjectId { get; set; }
     }
-
 }

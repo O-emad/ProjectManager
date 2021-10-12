@@ -29,7 +29,7 @@ namespace ProjectManager.Services
         #region Project
         bool ProjectExists(Guid projectId);
         IEnumerable<Project> GetProjects();
-        Project GetProjectById(Guid projectId, bool includeTasks = false, bool includeTeams = false);
+        Project GetProjectById(Guid projectId, bool includeTasks = false, bool includeTeams = false, bool includeSections = false);
         void AddProject(Project project, IEnumerable<Guid> associatedTeams = null);
         void DeleteProject(Project project);
         void UpdateProject(Project project);
@@ -37,6 +37,9 @@ namespace ProjectManager.Services
         public IEnumerable<ApplicationUser> GetUsersForProject(Guid projectId);
         #endregion
 
+        #region ProjectSection
+        public void AddSection(Guid projectId, ProjectSection section);
+        #endregion
 
 
         #region User

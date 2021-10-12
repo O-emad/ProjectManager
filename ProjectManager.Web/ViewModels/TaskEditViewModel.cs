@@ -57,7 +57,7 @@ namespace ProjectManager.Web.ViewModels
             CompletionStatus = task.CompletionStatus;
             UserId = task.UserId;
             TeamMembers = new SelectList(members, "Id", "UserName", new { task.UserId });
-            Projects = new MultiSelectList(projects, "Id", "Name",task.Projects.Select(p=>p.Id));
+            Projects = new MultiSelectList(projects, "Id", "Name",new List<ProjectModel> { task.Project });
         }
         public TaskEditViewModel(TaskEditViewModel viewModel)
         {

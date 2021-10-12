@@ -96,8 +96,7 @@
             {
                 var completion = task.CompletionStatus ? "completed" : "incompleted";
                 var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
-                var projectsCount = task.Projects.Count();
-                var project = task.Projects.FirstOrDefault();
+                var project = task.Project;
                 <tr>
                     <td>
                         <a class="text-black" asp-action="EditTask" asp-controller="Task" asp-route-id="@task.Id">
@@ -108,7 +107,7 @@
                         @if (project != null)
                         {
                         <a class="text-black" asp-action="ProjectDetails" asp-controller="Project" asp-route-id="@project.Id">
-                            @project.Name@(projectsCount > 1 ? $", +{projectsCount} more" : "")
+                            @project.Name
                         </a>
                     }
                     else

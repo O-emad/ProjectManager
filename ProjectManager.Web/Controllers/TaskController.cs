@@ -87,12 +87,14 @@ namespace ProjectManager.Web.Controllers
             var task = mapper.Map<TaskEditDto>(viewModel);
             var _task = repository.GetTaskById(viewModel.Id,includeProject: true);
             mapper.Map(task, _task);
-            var newProjects = new List<Project>();
-            foreach (var proj in task.ProjectIds)
-            {
-                newProjects.Add(repository.GetProjectById(proj));
-            }
-            _task.Projects = newProjects;
+            //var newProjects = new List<Project>();
+            //foreach (var proj in task.ProjectIds)
+            //{
+            //    newProjects.Add(repository.GetProjectById(proj));
+            //}
+            //_task.Projects = newProjects;
+            var project = repository.GetProjectById(task.ProjectId);
+            _task.Project = project;
             repository.Save();
 
 

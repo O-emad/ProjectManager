@@ -122,7 +122,7 @@ namespace ProjectManager.Web.Controllers
         public IActionResult ProjectDetails(Guid id)
         {
             
-            var project = mapper.Map<ProjectModel>(repository.GetProjectById(id,includeTasks: true, includeTeams: true));
+            var project = mapper.Map<ProjectModel>(repository.GetProjectById(id,includeTasks: true, includeTeams: true, includeSections: true));
             if(project == null)
             {
                 return View("NotFound");

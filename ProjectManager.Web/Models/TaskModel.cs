@@ -14,6 +14,6 @@ namespace ProjectManager.Web.Models
         public DateTime DueDate { get; set; }
         public bool CompletionStatus { get; set; }
         public Guid UserId { get; set; }
-        public List<ProjectModel> Projects { get; set; }
+        public ProjectModel Project { get; set; }
     }
 }

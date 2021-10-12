@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjectManager.Domain
 {
-    public class Project
+    public class ProjectSection
     {
         [Key]
         public Guid Id { get; set; }
-        [MaxLength(150)]
         public string Name { get; set; }
         public List<Task> Tasks { get; set; }
-        public List<Team> Teams { get; set; }
-        public List<ProjectSection> Sections { get; set; }
+        public Project Project { get; set; }
+        [ForeignKey("Project")]
+        public Guid ProjectId { get; set; }
     }
 }
