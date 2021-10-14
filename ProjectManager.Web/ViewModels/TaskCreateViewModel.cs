@@ -42,6 +42,7 @@ namespace ProjectManager.Web.ViewModels
         }
         public TaskCreateViewModel(IEnumerable<Member> members, ProjectModel parentProject)
         {
+            DueDate = DateTime.Now.Date;
             TeamMembers = new SelectList(members, "Id", "UserName");
             ProjectId = parentProject.Id;
             Sections = new SelectList(parentProject.Sections, "Id", "Name");

@@ -1,0 +1,62 @@
+﻿@model List<SectionModel>
+
+
+
+@foreach (var section in Model)
+{
+    <hr />
+    <a class="text-black" data-toggle="collapse" href="@("#table"+section.Id)" role="button" aria-expanded="false"
+       aria-controls="@("table"+section.Id)">
+        <i class="bi bi-caret-right-fill"></i>@(section.Name)
+    </a>
+
+    <div class="collapse @(section.Tasks.Count>0?"show":"")" id="@("table"+section.Id)">
+        <table class="table">
+            <thead>
+                <tr class="col-12">
+                    <th class="col-5 text-left">Name</th>
+                    <th class="col-4 text-left">Due Date</th>
+                    <th class="col-1 text-center">Completed</th>
+                    <th class="text-right col-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (section.Tasks != null && section.Tasks.Count > 0)
+                {
+                    @foreach (var task in section.Tasks)
+                    {
+                        var completion = task.CompletionStatus ? "completed" : "incompleted";
+                        var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
+                        <tr>
+                            <td>@task.Name</td>
+                            <td>
+                                @task.DueDate
+                            </td>
+                            <td class="text-center">
+
+                                <a class="btn btn-circle btn-outline-success @completion" asp-controller="Task"
+                                   asp-action="ToggleTaskCompletion"
+                                   asp-route-id="@task.Id"
+                                   asp-route-redirectUrl="@requestPath">
+                                    <i class="bi-check-lg"></i>
+                                </a>
+
+
+                            </td>
+                            <td class="text-right">
+
+                                <a class="btn btn-outline-info" asp-controller="Task" asp-action="EditTask" asp-route-id="@task.Id"
+                                   asp-route-callingProjectId="@(section.ProjectId)">Details</a>
+                                <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTaskmodal" data-toggle="modal"
+                                        onclick="window.click(this)" asp-controller="Task" asp-action="DeleteTask" asp-route-id="@task.Id"
+                                        asp-route-redirectUrl="@requestPath">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}

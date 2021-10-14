@@ -74,6 +74,24 @@ body {
     line-height: 60px; /* Vertically center the text there */
 }
 
+
+.card.draggable {
+    margin-bottom: 1rem;
+    cursor: grab;
+}
+
+    .card.draggable:hover {
+        box-shadow: 10px 5px 5px #8192f1;
+        /*border-color:crimson;*/
+    }
+
+.droppable {
+    background-color: #808080;
+    /*border:2px dashed var(--secondary);*/
+    min-height: 120px;
+    margin-bottom: 1rem;
+}
+
 .bi-check-lg {
     vertical-align: -3px;
 }
