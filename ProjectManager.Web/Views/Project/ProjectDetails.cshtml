@@ -107,6 +107,11 @@
                                 <select asp-for="TaskCreateViewModel.Section" asp-items="@Model.TaskCreateViewModel.Sections">
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label asp-for="TaskCreateViewModel.BoardSection"></label>
+                                <select asp-for="TaskCreateViewModel.BoardSection" asp-items="@Model.TaskCreateViewModel.BoardSections">
+                                </select>
+                            </div>
                             <input asp-for="TaskCreateViewModel.ProjectId" hidden />
                         </div>
                     </div>

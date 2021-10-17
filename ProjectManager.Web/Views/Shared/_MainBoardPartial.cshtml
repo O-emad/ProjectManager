@@ -1,5 +1,5 @@
 ﻿
-@model List<SectionModel>
+@model List<BoardSectionModel>
 
 <div class="container-fluid pt-3">
 
@@ -28,7 +28,9 @@
                                                asp-route-redirectUrl="@requestPath">
                                                 <i class="bi-check-lg"></i>
                                             </a>
-                                            <a href="" class="lead font-weight-light">@task.Name</a>
+                                            <p class="lead font-weight-light">@task.Name</p>
+                                            <a asp-controller="Project" asp-action="ProjectDetails" asp-route-id="@task.Project.Id" 
+                                               class="lead font-weight-light text-black" >Project: @task.Project.Name</a>
                                         </div>
                                         <p>
                                             @task.Description

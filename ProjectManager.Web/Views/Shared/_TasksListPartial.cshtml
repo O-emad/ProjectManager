@@ -46,7 +46,7 @@
                             <td class="text-right">
 
                                 <a class="btn btn-outline-info" asp-controller="Task" asp-action="EditTask" asp-route-id="@task.Id"
-                                   asp-route-callingProjectId="@(section.ProjectId)">Details</a>
+                                   asp-route-requestUrl="@requestPath">Details</a>
                                 <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTaskmodal" data-toggle="modal"
                                         onclick="window.click(this)" asp-controller="Task" asp-action="DeleteTask" asp-route-id="@task.Id"
                                         asp-route-redirectUrl="@requestPath">

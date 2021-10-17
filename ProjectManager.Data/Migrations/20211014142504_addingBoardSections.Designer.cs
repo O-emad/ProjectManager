@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectManager.Data;
 
 namespace ProjectManager.Data.Migrations
 {
     [DbContext(typeof(ProjectManagerContext))]
-    partial class ProjectManagerContextModelSnapshot : ModelSnapshot
+    [Migration("20211014142504_addingBoardSections")]
+    partial class addingBoardSections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,15 +167,15 @@ namespace ProjectManager.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e8518445-2e7f-4b14-89a1-ca545ac8a7e3"),
-                            ConcurrencyStamp = "7d3ce6e0-b258-4c74-8662-725163426514",
+                            Id = new Guid("fe0a08fe-9588-460e-ab33-a0c84dcc3cbd"),
+                            ConcurrencyStamp = "3b90c984-b212-44b6-a2d4-a327ad43adac",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("dc72b019-0d14-4194-bb24-98b4b840346c"),
-                            ConcurrencyStamp = "74479b39-00f3-419a-b262-34d1aca62c89",
+                            Id = new Guid("c6daa885-8ed2-4b4f-a7b7-8de06e5da300"),
+                            ConcurrencyStamp = "ce8167f7-9667-439f-babb-7eee78ab0171",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -299,7 +301,7 @@ namespace ProjectManager.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BoardSectionId")
+                    b.Property<Guid>("BoardSectionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("CompletionStatus")
@@ -449,7 +451,9 @@ namespace ProjectManager.Data.Migrations
                 {
                     b.HasOne("ProjectManager.Domain.BoardSection", "BoardSection")
                         .WithMany("Tasks")
-                        .HasForeignKey("BoardSectionId");
+                        .HasForeignKey("BoardSectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ProjectManager.Domain.Project", "Project")
                         .WithMany("Tasks")

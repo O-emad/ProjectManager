@@ -57,7 +57,17 @@ namespace ProjectManager.Services
             context.Add<ProjectSection>(section);
 
         }
-        public void AddTask(Domain.Task task, Guid sectionId = default(Guid))
+
+        public void AddBoardSection(BoardSection section)
+        {
+            if (section == null)
+                return;
+
+            context.Add<BoardSection>(section);
+
+        }
+
+        public void AddTask(Domain.Task task, Guid sectionId = default(Guid), Guid boardSectionId = default(Guid))
         {
 
             if (task == null) return;
@@ -70,12 +80,16 @@ namespace ProjectManager.Services
                     section.Tasks.Add(task);
                 }
             }
-            //else
-            //{
-            //    context.Add<Domain.Task>(task);
-            //}
-                
+            if (boardSectionId != default(Guid))
+            {
+                var section = GetBoardSectionById(boardSectionId, includeTasks: true);
+                if (section != null)
+                {
+                    section.Tasks.Add(task);
+                }
+            }
         }
+
         public void AddTask(Domain.Task task, IEnumerable<Guid> projectIds)
         {
 
@@ -118,6 +132,11 @@ namespace ProjectManager.Services
 
         #region Delete
 
+        public void DeleteBoardSection(BoardSection section)
+        {
+            context.Remove<BoardSection>(section);
+        }
+
         public async System.Threading.Tasks.Task DeleteUser(ApplicationUser user)
         {
             await userManager.DeleteAsync(user);
@@ -141,6 +160,26 @@ namespace ProjectManager.Services
 
         #region Read
         
+        public IEnumerable<BoardSection> GetBoardSections(bool includeTasks = false, bool includeTaskProject = false)
+        {
+            var sections = context.BoardSections as IQueryable<BoardSection>;
+            if (includeTasks && includeTaskProject)
+                sections = sections.Include(s => s.Tasks)
+                    .ThenInclude(t => t.Project);
+            if (includeTasks && !includeTaskProject)
+                sections = sections.Include(s => s.Tasks);
+            
+            return sections.ToList();
+        }
+        public BoardSection GetBoardSectionById(Guid sectionId, bool includeTasks = false )
+        {
+            var section = context.BoardSections as IQueryable<BoardSection>;
+            if (includeTasks)
+                section = section.Include(s => s.Tasks);
+            return section.FirstOrDefault(s => s.Id == sectionId);
+            
+        }
+
         public ApplicationUser GetUserById(Guid userId)
         {
             return context.Users.FirstOrDefault(u => u.Id == userId);
@@ -212,8 +251,13 @@ namespace ProjectManager.Services
                 section = section.Include(s => s.Tasks);
             return section.FirstOrDefault(s => s.Id == sectionId);
         }
+        public IEnumerable<ProjectSection> GetSectionForProject(Guid projectId)
+        {
+            return context.Sections.Where(s => s.ProjectId == projectId).ToList();
+        }
 
-        public Domain.Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false, bool includeSection = false)
+        public Domain.Task GetTaskById(Guid taskId, 
+            bool includeProject = false, bool includeUser = false, bool includeSection = false, bool includeMainSection = false)
         {
             var task = context.Tasks as IQueryable<Domain.Task>;
             if (includeUser)
@@ -222,6 +266,8 @@ namespace ProjectManager.Services
                 task = task.Include(t => t.Project);
             if (includeSection)
                 task = task.Include(t => t.Section);
+            if (includeMainSection)
+                task = task.Include(t => t.BoardSection);
             return task.FirstOrDefault(t => t.Id == taskId);
         }
 

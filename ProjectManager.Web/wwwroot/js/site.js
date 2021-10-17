@@ -47,9 +47,9 @@ function removeClass(ele, cls) {
     }
 }
 
-function updateTaskSection(taskId, sectionId) {
+function updateTaskSection(taskId, sectionId,type) {
     return $.ajax({
-        url: `/Task/UpdateTaskSection/${taskId}?sectionId=${sectionId}`,
+        url: `/Task/UpdateTaskSection/${taskId}?sectionId=${sectionId}&type=${type}`,
         type: 'GET',
         cache: false,
         data: {},
@@ -61,6 +61,21 @@ function updateTaskSection(taskId, sectionId) {
         },
     })
 }
+function updateTaskMainSection(taskId, sectionId) {
+    return $.ajax({
+        url: `/Task/UpdateMainSection/${taskId}?sectionId=${sectionId}`,
+        type: 'GET',
+        cache: false,
+        data: {},
+        success: function (response) {
+            doSomething('success');
+        },
+        error: function (response) {
+            doSomething(response.status + ' error');
+        },
+    })
+}
+
 function doSomething(response) {
     console.log(response);
 }
@@ -74,7 +89,9 @@ const drop = (event) => {
         const newSectionId = event.target.parentNode.id;
         const prefix = 'task';
         const taskId = data.substring(prefix.length);
-        var state = updateTaskSection(taskId, newSectionId).statusCode
+        var controller = location.pathname.split('/')[1];
+        console.log(controller);
+        var state = updateTaskSection(taskId, newSectionId, controller).statusCode;
         console.log(state);
         // remove the spacer content from dropzone
         event.target.removeChild(event.target.firstChild);

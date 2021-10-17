@@ -10,8 +10,8 @@ namespace ProjectManager.Services
         bool TaskExists(Guid taskId);
         IEnumerable<Task> GetTasks();
         System.Threading.Tasks.Task<IEnumerable<Task>> GetHighPriorityTasks(int size = 0, string userName = "", bool isAdmin = false);
-        Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false, bool includeSection = false);
-        void AddTask(Task task, Guid sectionId = default(Guid));
+        Task GetTaskById(Guid taskId, bool includeProject = false, bool includeUser = false, bool includeSection = false, bool includeMainSection = false);
+        void AddTask(Task task, Guid sectionId = default(Guid), Guid boardSectionId = default(Guid));
         void AddTask(Task task, IEnumerable<Guid> projectIds);
         void DeleteTask(Task task);
         void UpdateTask(Task task);
@@ -39,9 +39,16 @@ namespace ProjectManager.Services
 
         #region ProjectSection
         public ProjectSection GetSectionById(Guid sectionId, bool includeTasks = false);
+        public IEnumerable<ProjectSection> GetSectionForProject(Guid projectId);
         public void AddSection(Guid projectId, ProjectSection section);
         #endregion
 
+        #region BoardSection
+        public void AddBoardSection(BoardSection section);
+        public IEnumerable<BoardSection> GetBoardSections(bool includeTasks = false, bool includeTaskProject = false);
+        public BoardSection GetBoardSectionById(Guid sectionId, bool includeTasks = false);
+        public void DeleteBoardSection(BoardSection section);
+        #endregion
 
         #region User
         System.Threading.Tasks.Task DeleteUser(ApplicationUser user);

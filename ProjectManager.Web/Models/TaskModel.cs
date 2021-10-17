@@ -16,5 +16,6 @@ namespace ProjectManager.Web.Models
         public Guid UserId { get; set; }
         public ProjectModel Project { get; set; }
         public SectionModel Section { get; set; }
+        public BoardSectionModel BoardSection { get; set; }
     }
 }

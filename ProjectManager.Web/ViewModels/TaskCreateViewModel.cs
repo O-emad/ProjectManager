@@ -34,18 +34,24 @@ namespace ProjectManager.Web.ViewModels
 
         public SelectList Sections { get; set; }
 
+        [Display(Name = "Main Section")]
+        public Guid BoardSection { get; set; }
+
+        public SelectList BoardSections { get; set; }
+
         public Guid ProjectId { get; set; }
 
         public TaskCreateViewModel()
         {
 
         }
-        public TaskCreateViewModel(IEnumerable<Member> members, ProjectModel parentProject)
+        public TaskCreateViewModel(IEnumerable<Member> members, ProjectModel parentProject, IEnumerable<BoardSectionModel> boardSections)
         {
             DueDate = DateTime.Now.Date;
             TeamMembers = new SelectList(members, "Id", "UserName");
             ProjectId = parentProject.Id;
             Sections = new SelectList(parentProject.Sections, "Id", "Name");
+            BoardSections = new SelectList(boardSections, "Id", "Name");
         }
         //public TaskCreateViewModel(IEnumerable<Member> members, IEnumerable<ProjectModel> projects)
         //{

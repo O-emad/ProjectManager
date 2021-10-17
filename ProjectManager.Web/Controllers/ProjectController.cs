@@ -129,7 +129,8 @@ namespace ProjectManager.Web.Controllers
             }
             project.Tasks = project.Tasks.OrderBy(p => p.DueDate).ToList();
             var members = mapper.Map<List<Member>>( repository.GetUsersForProject(id));
-            var creatTaskViewModel = new TaskCreateViewModel(members, project);
+            var boardSections = mapper.Map<List<BoardSectionModel>>(repository.GetBoardSections());
+            var creatTaskViewModel = new TaskCreateViewModel(members, project,boardSections);
             var viewModel = new ProjectDetailsViewModel(project,creatTaskViewModel);
             return View(viewModel);
         }

@@ -25,5 +25,7 @@ namespace ProjectManager.Domain
         [ForeignKey("User")]
         public Guid UserId { get; set; }
         public ProjectSection Section { get; set; }
+        public BoardSection BoardSection { get; set; }
+
     }
 }

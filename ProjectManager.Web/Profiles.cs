@@ -14,6 +14,7 @@ namespace ProjectManager.Web
     {
         public Profiles()
         {
+            CreateMap<BoardSection, BoardSectionModel>().ReverseMap();
             CreateMap<ApplicationUser, Member>().ReverseMap();
             CreateMap<Team, TeamModel>()
                 .ForMember(dest=>dest.Members, opt=>opt.MapFrom(src=>src.User))
@@ -25,10 +26,10 @@ namespace ProjectManager.Web
                 opt => opt.Ignore()
                 //opt.MapFrom(src => src.ProjectIds.Select(p => new Project { Id = p }))
                 );
-            CreateMap<TaskEditViewModel, TaskEditDto>()
-                .ForMember(dest => dest.ProjectId,
-                opt =>
-                opt.MapFrom(src => src.SelectedProjects));
+            CreateMap<TaskEditViewModel, TaskEditDto>();
+                //.ForMember(dest => dest.ProjectId,
+                //opt =>
+                //opt.MapFrom(src => src.SelectedProjects));
 
             CreateMap<ProjectSection, SectionModel>().ReverseMap();
         }

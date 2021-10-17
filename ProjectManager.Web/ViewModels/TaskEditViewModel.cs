@@ -12,7 +12,10 @@ namespace ProjectManager.Web.ViewModels
 {
     public class TaskEditViewModel
     {
-        public Guid CallingProjectId { get; set; }
+        public Guid TaskProjectId { get; set; }
+
+        public string ReturnUrl { get; set; }
+
         [Required]
         [Display(Name = "Name")]
         [StringLength(50, MinimumLength = 2,
@@ -35,21 +38,28 @@ namespace ProjectManager.Web.ViewModels
         public Guid UserId { get; set; }
         public SelectList TeamMembers { get; set; }
 
-        [Display(Name = "Projects")]
-        public MultiSelectList Projects { get; set; }
+        [Display(Name = "Section")]
+        public Guid Section { get; set; }
 
-        public List<Guid> SelectedProjects { get; set; }
+        public SelectList Sections { get; set; }
 
-        public void Generate(IEnumerable<Member> members, IEnumerable<ProjectModel> projects)
+        [Display(Name = "Main Section")]
+        public Guid BoardSection { get; set; }
+
+        public SelectList BoardSections { get; set; }
+
+        public void Generate(IEnumerable<Member> members, IEnumerable<SectionModel> sections,
+             IEnumerable<BoardSectionModel> boardSections)
         {
             TeamMembers = new SelectList(members, "Id", "UserName", new { UserId });
-            Projects = new MultiSelectList(projects, "Id", "Name", SelectedProjects);
+            Sections = new SelectList(sections, "Id", "Name", new { Section });
+            BoardSections = new SelectList(boardSections, "Id", "Name", new { BoardSection });
         }
 
-        public TaskEditViewModel(TaskModel task,IEnumerable<Member> members, IEnumerable<ProjectModel> projects
-            , Guid callingProjectId = default)
+        public TaskEditViewModel(TaskModel task,IEnumerable<Member> members, IEnumerable<SectionModel> sections,
+             IEnumerable<BoardSectionModel> boardSections, Guid projectId)
         {
-            CallingProjectId = callingProjectId;
+            TaskProjectId = projectId;
             Name = task.Name;
             Id = task.Id;
             Description = task.Description;
@@ -57,7 +67,10 @@ namespace ProjectManager.Web.ViewModels
             CompletionStatus = task.CompletionStatus;
             UserId = task.UserId;
             TeamMembers = new SelectList(members, "Id", "UserName", new { task.UserId });
-            Projects = new MultiSelectList(projects, "Id", "Name",new List<ProjectModel> { task.Project });
+            Section = task.Section.Id;
+            Sections = new SelectList(sections, "Id", "Name", new { task.Section.Id });
+            BoardSection = task.BoardSection.Id;
+            BoardSections = new SelectList(boardSections, "Id", "Name", new { task.BoardSection.Id });
         }
         public TaskEditViewModel(TaskEditViewModel viewModel)
         {

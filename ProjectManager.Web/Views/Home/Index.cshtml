@@ -99,7 +99,7 @@
                 var project = task.Project;
                 <tr>
                     <td>
-                        <a class="text-black" asp-action="EditTask" asp-controller="Task" asp-route-id="@task.Id">
+                        <a class="text-black" asp-action="EditTask" asp-controller="Task" asp-route-id="@task.Id" asp-route-returnUrl ="@requestPath">
                             @task.Name
                         </a>
                     </td>
