@@ -126,17 +126,17 @@
         </div>
     </div>
 
-    <div class="modal fade" tabindex="-1" role="dialog" id="deleteTaskmodal">
+    <div class="modal fade" tabindex="-1" role="dialog" id="deletemodal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title text-left">Delete Task</h4>
+                    <h4 id="deletemodaltitle" class="modal-title text-left">Delete Task</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <strong class="text-danger">Are you sure you want to delete this task?</strong>
+                    <strong class="text-danger">Are you sure you want to this item?</strong>
                 </div>
 
                 <div class="modal-footer">
@@ -178,6 +178,29 @@
                 </div>
 
             </form>
+        </div>
+    </div>
+    
+    <div class="modal fade" tabindex="-1" role="dialog" id="deleteSectionmodal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-left">Delete Section</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <strong class="text-danger">Are you sure you want to delete this section?</strong>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <a id="deleteConfirmationSubmit" href="~/" class="btn btn-outline-danger">Delete</a>
+
+                </div>
+
+            </div>
         </div>
     </div>
 

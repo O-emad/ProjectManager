@@ -36,5 +36,50 @@ namespace ProjectManager.Web.Controllers
             repository.Save();
             return RedirectToAction("ProjectDetails", "Project", new { id = id });
         }
+
+        public IActionResult EditSection(Guid id)
+        {
+            var section = repository.GetSectionById(id);
+            if (section == null)
+            {
+                ViewBag.ErrorMessage = "the given section was not found";
+                return View("NotFound");
+            }
+            var _section = mapper.Map<SectionModel>(section);
+            var viewModel = new SectionEditViewModel
+            {
+                Id = _section.Id,
+                Name = _section.Name,
+                ProjectId = _section.ProjectId
+            };
+            return View(viewModel);
+         }
+
+        [HttpPost]
+        public IActionResult EditSection(SectionEditViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+            var section = repository.GetSectionById(viewModel.Id);
+            if(section != null)
+            {
+                section.Name = viewModel.Name;
+                repository.Save();
+            }
+            return RedirectToAction("ProjectDetails", "Project", new { id = viewModel.ProjectId });
+        }
+
+        public IActionResult DeleteSection(Guid id, string redirectUrl)
+        {
+            var section = repository.GetSectionById(id);
+            if(section != null)
+            {
+                repository.DeleteSection(section);
+                repository.Save();
+            }
+            return LocalRedirect(redirectUrl);
+        }
     }
 }

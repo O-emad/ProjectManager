@@ -146,6 +146,10 @@ namespace ProjectManager.Services
         {
             context.Remove<Project>(project);
         }
+        public void DeleteSection(ProjectSection section)
+        {
+            context.Remove<ProjectSection>(section);
+        }
 
         public void DeleteTask(Domain.Task task)
         {

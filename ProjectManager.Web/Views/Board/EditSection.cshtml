@@ -1,0 +1,25 @@
+﻿
+@model ProjectManager.Web.ViewModels.BoardSectionEditViewModel
+
+<form class="card shadow" method="post" asp-controller="Board" asp-action="EditSection" asp-route-id="@Model.Id" role="form" enctype="multipart/form-data">
+    <h4 class="card-title" style="margin-left:1.25rem; margin-top:1.25rem;"><strong>Edit Section : @Model.Name</strong></h4>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="card-body form-type-combine">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="Name" class="require"></label>
+                    <input type="text" class="form-control" asp-for="Name" required>
+                    <span asp-validation-for="Name" class="text-danger invalid-feedback"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="card-footer text-right">
+        <a class="btn btn-outline-secondary" asp-controller="Board" asp-action="Index">Cancel</a>
+        <button class="btn btn-outline-primary" type="submit">Submit</button>
+    </footer>
+</form>

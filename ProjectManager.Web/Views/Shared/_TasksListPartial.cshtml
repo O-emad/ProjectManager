@@ -4,11 +4,22 @@
 
 @foreach (var section in Model)
 {
+    var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
     <hr />
     <a class="text-black" data-toggle="collapse" href="@("#table"+section.Id)" role="button" aria-expanded="false"
        aria-controls="@("table"+section.Id)">
         <i class="bi bi-caret-right-fill"></i>@(section.Name)
+
     </a>
+    <a asp-controller="Section" asp-action="EditSection"
+       asp-route-id="@(section.Id)"><i class="bi bi-three-dots text-black"></i></a>
+
+    <button id="submitDelete" class="close" data-target="#deletemodal" data-toggle="modal"
+            onclick="window.click(this)" asp-controller="Section" asp-action="DeleteSection" asp-route-id="@(section.Id)"
+            asp-route-redirectUrl="@requestPath">
+        &times;
+    </button>
+
 
     <div class="collapse @(section.Tasks.Count>0?"show":"")" id="@("table"+section.Id)">
         <table class="table">
@@ -26,7 +37,7 @@
                     @foreach (var task in section.Tasks)
                     {
                         var completion = task.CompletionStatus ? "completed" : "incompleted";
-                        var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
+                        
                         <tr>
                             <td>@task.Name</td>
                             <td>
@@ -47,7 +58,7 @@
 
                                 <a class="btn btn-outline-info" asp-controller="Task" asp-action="EditTask" asp-route-id="@task.Id"
                                    asp-route-requestUrl="@requestPath">Details</a>
-                                <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTaskmodal" data-toggle="modal"
+                                <button id="submitDelete" class="btn btn-outline-danger" data-target="#deletemodal" data-toggle="modal"
                                         onclick="window.click(this)" asp-controller="Task" asp-action="DeleteTask" asp-route-id="@task.Id"
                                         asp-route-redirectUrl="@requestPath">
                                     Delete

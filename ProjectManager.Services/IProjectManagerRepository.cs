@@ -41,6 +41,7 @@ namespace ProjectManager.Services
         public ProjectSection GetSectionById(Guid sectionId, bool includeTasks = false);
         public IEnumerable<ProjectSection> GetSectionForProject(Guid projectId);
         public void AddSection(Guid projectId, ProjectSection section);
+        public void DeleteSection(ProjectSection section);
         #endregion
 
         #region BoardSection

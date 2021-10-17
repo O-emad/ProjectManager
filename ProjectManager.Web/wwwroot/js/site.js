@@ -6,8 +6,13 @@
 
 function click(btn) {
     let attribute = btn.getAttribute('formaction');
+    let controller = attribute.split('/')[1];
+    console.log(controller);
     let element = document.getElementById('deleteConfirmationSubmit');
     element.setAttribute('href', attribute);
+    let title = document.getElementById('deletemodaltitle');
+    title.innerText = 'Delete ' + controller;
+    
 }
 
 

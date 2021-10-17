@@ -49,6 +49,56 @@ namespace ProjectManager.Web.Controllers
             repository.Save();
             return RedirectToAction("Index");
         }
-        
+
+        public IActionResult DeleteSection(Guid id, string redirectUrl)
+        {
+            var section = repository.GetBoardSectionById(id,includeTasks:true);
+            if(section!= null)
+            {
+                if (section.Tasks.Count > 0)
+                {
+                    ViewBag.ErrorTitle = "this section has tasks in it, please delete the tasks first";
+                    return View("Error");
+                }
+                repository.DeleteBoardSection(section);
+                repository.Save();
+            }
+            return LocalRedirect(redirectUrl);
+        }
+
+        public IActionResult EditSection(Guid id)
+        {
+            var section = repository.GetBoardSectionById(id);
+            if (section == null)
+            {
+                ViewBag.ErrorMessage = "the given section was not found";
+                return View("NotFound");
+            }
+            var _section = mapper.Map<BoardSectionModel>(section);
+            var viewModel = new BoardSectionEditViewModel
+            {
+                Id = _section.Id,
+                Name = _section.Name,
+            };
+            return View(viewModel);
+
+        }
+        [HttpPost]
+        public IActionResult EditSection(BoardSectionEditViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+            var section = repository.GetBoardSectionById(viewModel.Id);
+            if (section != null)
+            {
+                section.Name = viewModel.Name;
+                repository.Save();
+            }
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

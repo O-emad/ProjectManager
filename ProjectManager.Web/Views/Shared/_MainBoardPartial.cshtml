@@ -6,17 +6,27 @@
     <div class="row flex-row flex-sm-nowrap py-3 overflow-auto">
         @foreach (var section in Model)
         {
+            var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
             <div class="col-sm-6 col-md-4 col-xl-3">
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-title text-uppercase text-truncate py-2">@(section.Name)</h6>
+                        <h6 class="card-title text-uppercase text-truncate py-2">
+                            @(section.Name)
+                            <a asp-controller="Board" asp-action="EditSection"
+                               asp-route-id="@(section.Id)"><i class="bi bi-three-dots text-black"></i></a>
+                            <button id="submitDelete" class="close" data-target="#deletemodal" data-toggle="modal"
+                                    onclick="window.click(this)" asp-controller="Board" asp-action="DeleteSection" asp-route-id="@(section.Id)"
+                                    asp-route-redirectUrl="@requestPath">
+                                &times;
+                            </button>
+                        </h6>
                         <hr />
                         <div class="items" id="@(section.Id)">
 
                             @foreach (var task in section.Tasks)
                             {
                                 var completion = task.CompletionStatus ? "completed" : "incompleted";
-                                var requestPath = Url.ActionContext.HttpContext.Request.Path.ToString();
+                                
                                 <div class="dropzone rounded" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="clearDrop(event)"> &nbsp; </div>
                                 <div class="card draggable" id="@("task"+task.Id)" draggable="true" ondragstart="drag(event)">
                                     <div class="card-body p-2">
@@ -38,7 +48,7 @@
                                         <input asp-for="@task.Section.Id" id="@("task"+task.Id+"section")" hidden />
                                         <a class="btn btn-outline-info" asp-controller="Task" asp-action="EditTask" asp-route-id="@task.Id"
                                            asp-route-requestUrl="@requestPath">Details</a>
-                                        <button id="submitDelete" class="btn btn-outline-danger" data-target="#deleteTaskmodal" data-toggle="modal"
+                                        <button id="submitDelete" class="btn btn-outline-danger" data-target="#deletemodal" data-toggle="modal"
                                                 onclick="window.click(this)" asp-controller="Task" asp-action="DeleteTask" asp-route-id="@task.Id"
                                                 asp-route-redirectUrl="@requestPath">
                                             Delete
